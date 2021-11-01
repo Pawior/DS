@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        h1 {
+            margin: 40px;
+            width: 200px;
+            height: 100px;
+            background-color: rgb(35, 153, 168);
+
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../libs/jq.js"> </script>
+    <script>
+        $(document).ready(function () {
+
+            let choose = $("#sel").val()
+            $("#sel").on("change", () => {
+                console.log(choose)
+                choose = $("#sel").val()
+            })
+            $("#btnCreate").on("click", () => {
+                $("#mainDiv").empty()
+                for (i = 0; i < choose; i++) {
+                    let h1 = $("<h1>").addClass("h1")
+                    $("#mainDiv").append(h1.text(i))
+                    h1.on("click", function () {
+                        let answer = confirm("Czy chcesz usunąć?")
+                        console.log(answer)
+                        if (answer == true) {
+                            console.log(this)
+                            $(this).remove()
+                        }
+                    })
+
+                }
+
+            })
+            $("#btnDelete").on("click", () => {
+                $("#mainDiv").empty()
+            })
+        })
+    </script>
+</head>
+
+<body>
+    <button id="btnCreate"> Utwórz menu </button>
+    <button id="btnDelete"> Usuń menu</button>
+    <select id="sel">
+        <option value="1">1 </option>
+        <option value="2">2 </option>
+        <option value="3">3 </option>
+        <option value="4">4 </option>
+        <option value="5">5 </option>
+        <option value="6">6 </option>
+    </select>
+    <div id="mainDiv"> </div>
+
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        #div1 {
+            width: 500px;
+            height: 500px;
+            background-color: gray;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="libs/jq.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log("a")
+            $("#btn1").on("click", function () {
+                var answer = confirm(" Czy chcesz zmienic?")
+                if (answer == true) {
+                    $("#div").css("width", 1000)
+                }
+                if (answer == false) {
+                    $("#div").css("width", 150)
+                }
+                console.log(answer)
+            })
+        })
+    </script>
+</head>
+
+<body>
+    <button id="btn1"> dzialaj </button>
+    <div id="div1"> </div>
+
+</body>
+
+</html>

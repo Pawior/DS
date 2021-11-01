@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      #container {
+        display: flex;
+        width: 100%;
+        height: 100%;
+      }
+
+      #left {
+        background-color: yellow;
+        height: 100vh;
+        width: 49vw;
+      }
+
+      #line {
+        background-color: gray;
+        height: 100vh;
+        width: 4vw;
+        cursor: pointer;
+      }
+
+      #right {
+        background-color: red;
+        height: 100vh;
+        width: 49vw;
+      }
+    </style>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../libs/jq.js"></script>
+    <script>
+      $(document).ready(() => {
+        var leftW = $("#left").width();
+        var rightW = $("#right").width();
+        $("#line").on("mousedown", function (e) {
+          var startX = e.clientX;
+          var startY = e.clientY;
+
+          //   console.log("x: " + e.clientX + ", y: " + e.clientY);
+          console.log("x" + startX + ", y: " + startY);
+          $("#line").on("mousemove", function (e) {
+            var leftW = $("#left").width();
+            var rightW = $("#right").width();
+            var diffLeft = leftW - (startX - e.clientX) * 0.05;
+            var diffRight = rightW + (startX - e.clientX) * 0.05;
+
+            $("#left").width(diffLeft);
+            $("#right").width(diffRight);
+
+            // $("#left").width(leftW - (startX - e.clientX) * 0.05);
+            // $("#right").width(rightW + (startX - e.clientX) * 0.05);
+
+            console.log("x: " + e.clientX + ", y: " + e.clientY);
+          });
+
+          //   $("#line").on("mouseup", function (e) {
+          //     $("#line").unbind("mousemove");
+          //     e.preventDefault();
+          //   });
+        });
+        $(window).on("mouseup", function (e) {
+          $("#line").unbind("mousemove");
+          //   e.preventDefault();
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="left"></div>
+      <div id="line"></div>
+      <div id="right"></div>
+    </div>
+  </body>
+</html>

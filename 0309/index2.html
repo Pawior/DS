@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #square {
+            width: 400px;
+            height: 400px;
+            background-color: gray;
+        }
+
+        h1 {
+            color: blue;
+        }
+
+        button {
+            margin: 0 auto;
+        }
+    </style>
+    <script src="libs/jq.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log("JQ się uruchomił, wszystko działa!")
+
+            $("#dodajusun").on("click", function () {
+                $("#square").on("mouseover", function () {
+                    $("#square")
+                        .css("background", "black")
+                        .css("width", 400)
+                        .css("height", 400)
+                })
+                $("#square").on("mouseout", function () {
+                    $("#square")
+                        .css("background", "gray")
+                        .css("width", 400)
+                        .css("height", 400)
+                })
+            })
+        })
+    </script>
+
+</head>
+
+<body>
+    <h1>T: jQuery - zdarzenia</h1>
+    <button id="dodajusun">DODAJ / USUŃ LISTENERY</button>
+    <div id="square"></div>
+</body>
+
+</html>
