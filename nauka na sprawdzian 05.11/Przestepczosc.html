@@ -22,10 +22,30 @@
         width: 20px;
       }
       td:nth-child(4n-1) {
-        width: 250px;
+        width: 200px;
       }
       td:nth-child(4n) {
         width: 30px;
+      }
+      .bgSlider {
+        padding: 5px;
+        width: 230px;
+        height: 30px;
+        border-radius: 25px;
+        margin: 0;
+        position: relative;
+        box-sizing: border-box;
+        background-color: rgb(54, 54, 54);
+      }
+      .dot {
+        height: 30px;
+        width: 30px;
+        background-color: rgb(172, 121, 26);
+        border-radius: 50%;
+        display: block;
+        position: absolute;
+        left: 100px;
+        bottom: 0px;
       }
     </style>
     <script src="../libs/jq.js"></script>
@@ -34,6 +54,9 @@
         let table = $("#table");
         let dayAvg = 50;
         let nightAvg = 50;
+        let canDrag = true;
+        let min = 0;
+        let max = 200;
         // $("#slider").slider();
         for (var i = 0; i < 12; i++) {
           let tr = $("<tr>");
@@ -43,14 +66,15 @@
           if (i < 9) {
             for (var j = 0; j < 4; j++) {
               let td = $(`<td id=${i}_${j}>`);
-              let pSlider = $('<input type="range" id="slider"> </input>');
+              let bgSlider = $("<div> </div>").addClass("bgSlider");
+              let dot = $("<div> </div>").addClass("dot");
+              // let pSlider = $('<input type="range" id="slider"> </input>');
               if (j == 0) {
-                td.text("Komisariat " + i + i);
+                td.text("Komisariat " + i);
               }
-              pSlider.on("change", function () {
-                console.log(pSlider.val());
-                nightP = parseFloat(pSlider.val());
-                dayP = 100 - pSlider.val();
+              function insertValue(currentPosition) {
+                nightP = parseFloat(currentPosition);
+                dayP = 100 - currentPosition;
                 let dayAvgTd = $(".dayAvgTd");
                 let nightAvgTd = $(".nightAvgTd");
                 let daySum = 0;
@@ -66,19 +90,97 @@
                 console.log(daySum);
                 dayAvgTd.text("Dzień: " + Math.round(daySum / 8));
                 nightAvgTd.text("Noc: " + Math.round(nightSum / 8));
-              });
+              }
+              // pSlider.on("change", function () {
+              //   console.log(pSlider.val());
+              //   nightP = parseFloat(pSlider.val());
+              //   dayP = 100 - pSlider.val();
+              //   let dayAvgTd = $(".dayAvgTd");
+              //   let nightAvgTd = $(".nightAvgTd");
+              //   let daySum = 0;
+              //   let nightSum = 0;
+              //   $(this).parent().prev().text(dayP);
+              //   $(this).parent().next().text(nightP);
+              //   $(".dayTd").each(function () {
+              //     daySum += parseFloat($(this).text()); // Or this.innerHTML, this.innerText
+              //   });
+              //   $(".nightTd").each(function () {
+              //     nightSum += parseFloat($(this).text()); // Or this.innerHTML, this.innerText
+              //   });
+              //   console.log(daySum);
+              //   dayAvgTd.text("Dzień: " + Math.round(daySum / 8));
+              //   nightAvgTd.text("Noc: " + Math.round(nightSum / 8));
+              // });
               if (i > 0) {
                 if (j == 1) {
                   td.text(dayP).addClass("dayTd");
                 }
                 if (j == 2) {
-                  td.append(pSlider);
+                  td.append(bgSlider);
+                  bgSlider.append(dot);
                 }
                 if (j == 3) {
                   td.text(nightP).addClass("nightTd");
                 }
               }
               tr.append(td);
+
+              $(dot).on("mousedown", function (e) {
+                canDrag = true;
+                var startX = $(this).position().left;
+                // console.log("left: " + $(this).position().left);
+                console.log(e.pageX - $(this).parent().offset().left);
+                $(dot).on("mousemove", function (e) {
+                  // console.log("clientX: " + e.clientX);
+                  // console.log("offsetX: " + $(this).offset().left);
+                  // console.log(e.clientX - $(this).offset().left);
+                  var parentOffset = $(this).parent().offset();
+                  var relX = e.pageX - parentOffset.left;
+                  // console.log(relX);
+                  // console.log(startX);
+                  if (canDrag == true) {
+                    var currentPosition =
+                      e.clientX - $(this).parent().offset().left - 10;
+                    if (min < currentPosition && currentPosition < max) {
+                      var currentPositionVal = currentPosition;
+                      console.log(currentPositionVal);
+                      nightP = parseInt(currentPositionVal) / 2;
+                      if (nightP > 50) {
+                        dayP = 100 - nightP;
+                        dayP = parseInt(dayP);
+                      } else {
+                        dayP = 100 - nightP;
+                        dayP = parseInt(dayP);
+                      }
+
+                      let dayAvgTd = $(".dayAvgTd");
+                      let nightAvgTd = $(".nightAvgTd");
+                      let daySum = 0;
+                      let nightSum = 0;
+                      $(this).parent().parent().prev().text(dayP);
+                      $(this).parent().parent().next().text(nightP);
+                      $(".dayTd").each(function () {
+                        daySum += parseInt($(this).text()); // Or this.innerHTML, this.innerText
+                      });
+                      $(".nightTd").each(function () {
+                        nightSum += parseInt($(this).text()); // Or this.innerHTML, this.innerText
+                      });
+                      // console.log(daySum);
+                      dayAvgTd.text("Dzień: " + Math.round(daySum / 8));
+                      nightAvgTd.text("Noc: " + Math.round(nightSum / 8));
+                      $(this).css({
+                        left: currentPosition,
+                      });
+                    }
+                  }
+                });
+                $(dot).on("mouseup", function (e) {
+                  canDrag = false;
+                });
+                $(dot).on("mouseout", function (e) {
+                  canDrag = false;
+                });
+              });
             }
           }
           if (i >= 9) {
