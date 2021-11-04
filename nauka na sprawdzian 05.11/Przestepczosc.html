@@ -45,7 +45,7 @@
               let td = $(`<td id=${i}_${j}>`);
               let pSlider = $('<input type="range" id="slider"> </input>');
               if (j == 0) {
-                td.text("Komisariat " + i);
+                td.text("Komisariat " + i + i);
               }
               pSlider.on("change", function () {
                 console.log(pSlider.val());
