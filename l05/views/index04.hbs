@@ -1,0 +1,11 @@
+<form action="/handleForm" method="GET" name="fields">
+    <select name="fields">
+        {{#each fields}}
+        <option value={{name}}>{{name}}</option>
+        {{/each}}
+        {{!-- <option value="title">title</option>
+        <option value="authors">authors</option>
+        <option value="Lang">Lang</option> --}}
+    </select>
+    <button type="submit"> Submit</button>
+</form>
