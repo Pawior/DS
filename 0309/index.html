@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #div1 {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+    </style>
+    <script src="libs/jq.js"></script>
+    <script>
+        //startowanie jq- info cały czas w konsoli
+        $(document).ready(function () {
+            console.log("It's working!")
+
+            //info w konsoli po buttonie
+            $("#bt1").on("click", function () {
+                console.log("ERROR 404")
+            })
+
+            //alert
+            $("#bt2").on("click", function () {
+                alert("ALERT RCB")
+            })
+
+            //pętla i potwierdzenie
+            $("#bt3").on("click", function () {
+                var co = confirm("komunikat")
+                console.log(co)
+                //pętla
+                if(co) {
+                    console.log("szto")
+                }
+                else {
+                    console.log("what")
+                }
+            })
+            //manipulacje
+            $("#bt4").on("click", function () {
+                $("#div1")
+                    .css("width", 200)
+                    .css("height", 400)
+                    .css("background", "blue")
+                    .html("to jest div")
+                    .width(1000)
+            })
+            //anulowanie działania innego przycisku
+            $("#bt5").on("click", function () {
+                $("#bt4").off("click")
+            })    
+        })
+    </script>
+</head>
+
+<body>
+    <!-- Elementy html -->
+    <button id="bt1">Klik</button>
+    <button id="bt2">Alert</button>
+    <button id="bt3">Komunikat</button>
+    <button id="bt4">css</button>
+    <button id="bt5">Cancel</button>
+    <div id="div1"></div>
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        td {
+            border: 1px solid black;
+            width: 50px;
+            height: 20px;
+            text-align: center;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../libs/jq.js"></script>
+    <script>
+        $(document).ready(function () {
+            var lps = ["lp", "cena", "produkt"]
+            var ceny = ["5,60", "3,23", "7,45", "10,00", "3,20"]
+            var produkty = ["chleb", "mąka", "masło", "kefir", "dżem"]
+            $("#createTable").on("click", function () {
+                let tr = $("<tr>")
+                for (var i = 0; i < lps.length; i++) {
+                    let td = $("<td>").text(lps[i])
+                    tr.append(td)
+                    $("#tabela").append(tr)
+                }
+                var suma = 0;
+                for (var j = 0; j < produkty.length; j++) {
+                    let tr = $("<tr>")
+                    let td = $("<td>").text(j + 1)
+                    let td2 = $("<td>").text(ceny[j])
+                    let td3 = $("<td>").text(produkty[j])
+                    tr.append(td)
+                    tr.append(td2)
+                    tr.append(td3)
+                    $("#tabela").append(tr)
+
+                    var sparsowane = parseFloat(ceny[j].replace(/,/g, '.'))
+                    console.log(sparsowane)
+                    console.log(ceny[j])
+                    suma += sparsowane
+                    console.log(suma)
+
+                    if (j == produkty.length - 1) {
+                        let tr = $("<tr>")
+                        let td = $("<td>").text("suma")
+                        let td2 = $("<td>").text(suma).attr("colspan", "2")
+                        tr.append(td)
+                        tr.append(td2)
+                        $("#tabela").append(tr)
+                    }
+
+                }
+
+            })
+        })
+
+
+    </script>
+
+</head>
+
+<body>
+    <button id="createTable"> Stwórz tabele </button>
+    <table id="tabela"></table>
+</body>
+
+</html>

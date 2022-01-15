@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            height: 100px;
+            width: 100px;
+            background-color: rgb(120, 120, 173);
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+</head>
+
+<body>
+    <input type="text" id="input1">
+    <input type="text" id="input2">
+    <br />
+    <br />
+    <div id="postBtn"> klik</div>
+    <script>
+        $("#postBtn").click(function () {
+            var num1 = $("#input1").val()
+            var num2 = $("#input2").val()
+            // console.log(num1)
+            $.ajax({
+                url: "/post",
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    a: num1,
+                    b: num2
+                }),
+                type: "POST",
+                success: function (data) {
+                    //czytamy odesłane z serwera dane
+                    console.log(data)
+                    //ew parsujemy na obiekt
+                    var obj = JSON.stringify(data)
+                    console.log(obj)
+                    alert(obj)
+
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error: ' + error.message);
+                },
+            });
+        })
+
+    </script>
+
+</body>
+
+</html>

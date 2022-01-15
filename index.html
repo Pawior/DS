@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #div1 {
+            width: 100px;
+            height: 50px;
+            background-color: red;
+        }
+    </style>
+    <script src="libs/jq.js"></script>
+    <script>
+        $(document).ready(function () {
+            console.log("jq działa")
+
+            $("#btn1").on("click", function () {
+                console.log("test")
+            })
+
+            $("#btn2").on("click", function () {
+                alert("test")
+            })
+            $("#btn3").on("click", function () {
+                var co = confirm("test")
+                console.log(co)
+                if (co) {
+                    console.log("ta")
+                }
+                else {
+                    console.log("nie")
+                }
+            })
+            $("#btn4").on("click", function () {
+                $("#div1").css("width", 200).css("height", 400).css("background", "blue").html("<h1> To jest div </h1>").width(1000)
+            })
+            $("#btn5").on("click", function () {
+                $("#btn4").off("click")
+            })
+        })
+
+
+
+    </script>
+</head>
+
+<body>
+    <button id="btn1"> btn </button>
+    <button id="btn2"> alert</button>
+    <button id="btn3"> confirm</button>
+    <button id="btn4"> change</button>
+    <button id="btn5"> cancel</button>
+    <div id="div1"> </div>
+</body>
+
+</html>

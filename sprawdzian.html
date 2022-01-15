@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .field {
+            position: relative;
+            /* top: 50px;
+            left: 50px; */
+            height: 50px;
+            /* width: 450px; */
+            overflow: hidden;
+        }
+
+        .circle {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: blue;
+            text-align: center;
+            color: white;
+        }
+
+        table,
+        tr,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+    <script src="./libs/jq.js"></script>
+    <script>
+        $(window).ready(() => {
+            const values = ["interpersonalna", "kinetyczna", 'muzyczna', 'lingw', 'wizualno', 'logiczno', 'intraper']
+            const colors = ["pink", 'yellow', "tomato", "green", "black", "red", "lime"]
+            const width = [90, 70, 65, 50, 85, 70, 50]
+
+            for (let i = 0; i < 7; i++) {
+                let tr = $("<tr>")
+
+
+                let td1 = $("<td>")
+                td1.html(values[i])
+                tr.append(td1)
+
+
+                let td2 = $("<td>")
+                let div2 = $("<div>")
+                div2.attr("id", "d" + i)
+                let circle = $("<div>")
+                circle.addClass("circle")
+                div2.addClass("field")
+                circle.on("mousedown", () => {
+                    div2.on("mousemove", (e) => {
+                        // console.log(document.querySelector("#d" + i))
+                        let rect = document.querySelector("#d" + i).getBoundingClientRect()
+                        // console.log($('#d' + i))
+                        let left = e.clientX - rect.left
+                        let width2 = div2.width()
+
+                        if (left < width2 - 50 && left > 0) {
+                            console.log(width[i])
+                            let percent = Math.round(left / (width2 - 50) * width[i])
+                            console.log(percent)
+                            $("#k" + i).text(Math.round(percent))
+                            calculate()
+                            circle.text(Math.round(percent))
+                            circle.css("left", left)
+                        }
+                        // console.log(b)
+                    })
+                })
+
+                $(window).on("mouseup", () => {
+                    div2.off("mousemove")
+                })
+
+                div2.css("background-color", colors[i]).css("width", width[i] * 3)
+                div2.append(circle)
+                td2.append(div2)
+                tr.append(td2)
+
+
+                td3 = $("<td>")
+                td3.attr("id", "k" + i)
+                td3.css("width", 50)
+                td3.text(0)
+                tr.append(td3)
+
+                $("#table").append(tr)
+
+
+
+            }
+
+            tr2 = $("<tr>")
+            td21 = $("<td>")
+            td21.text("suma")
+            td22 = $("<td>")
+            td22.attr("id", "suma")
+            tr2.append(td21).append(td22)
+            $("#table").append(tr2)
+
+
+            const calculate = () => {
+                let sum = 0;
+                for (let j = 0; j < 7; j++) {
+                    sum += parseInt($("#k" + j).text())
+                    $("#suma").text(sum)
+                }
+                console.log(sum)
+            }
+        })
+
+
+
+    </script>
+</head>
+
+<body>
+    <table id="table"></table>
+</body>
+
+</html>

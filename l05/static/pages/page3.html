@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {}
+
+        #posText {
+            background-color: gray;
+            width: 300px;
+            height: 100px;
+            float: left;
+            font-size: 1.5rem;
+        }
+
+        #delayText {
+            background-color: rgb(180, 177, 177);
+            width: 300px;
+            height: 100px;
+            float: left;
+            font-size: 1.5rem;
+        }
+
+        #posDiv {
+            background-color: yellow;
+            width: 300px;
+            height: 700px;
+            float: left;
+            position: relative;
+        }
+
+        #delayDiv {
+            background-color: greenyellow;
+            width: 300px;
+            height: 700px;
+            float: left;
+            position: relative;
+        }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+</head>
+
+<body>
+    <div id="container">
+        <div id="posText"> Pozycja </div>
+        <div id="delayText"> Opóźnienie </div>
+        <div id="posDiv"></div>
+        <div id="delayDiv"></div>
+    </div>
+    <script>
+        $("#posDiv").on("click", function (e) {
+            var parentOffset = $(this).parent().offset();
+            var posX = e.pageX - parentOffset.left,
+                posY = e.pageY - parentOffset.top;
+            // console.log(num1)
+            $.ajax({
+                url: "/post",
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    x: posX,
+                    y: posY
+                }),
+                type: "POST",
+                success: function (data) {
+                    //czytamy odesłane z serwera dane
+                    console.log(data)
+                    //ew parsujemy na obiekt
+                    var obj = JSON.stringify(data)
+                    console.log(obj)
+                    // alert(obj)
+                    $("#input2").val(data)
+                    let newDiv = document.createElement("div")
+                    newDiv.style.left = data.x + "px"
+                    newDiv.style.top = data.y + "px"
+                    $('#delayDiv').append(newDiv);
+                },
+                error: function (xhr, status, error) {
+                    console.log('Error: ' + error.message);
+                },
+            });
+        })
+
+    </script>
+
+</body>
+
+</html>

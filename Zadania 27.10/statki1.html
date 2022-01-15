@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .pole {
+        width: 30px;
+        height: 30px;
+        border: 1px solid;
+        float: left;
+      }
+      .pole:nth-child(10n -9) {
+        clear: both;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script>
+      // użyć nth:child(10n+1) żeby ułożyć poled
+      var mapSize = 10;
+      var shipsAmount = 10;
+      // tworzenie array
+      var tab = [];
+      for (var i = 0; i < 10; i++) {
+        var tabInTab = [];
+        for (var j = 0; j < 10; j++) {
+          tabInTab.push(0);
+        }
+        tab.push(tabInTab);
+      }
+      // ----
+      generateMap();
+      generateShips();
+
+      //   generateMap();
+
+      function generateMap() {
+        var container = document.querySelector("#container");
+        for (var i = 0; i < mapSize; i++) {
+          for (var j = 0; j < mapSize; j++) {
+            var pole = document.createElement("div");
+            pole.id = i + "_" + j;
+            pole.classList = "pole";
+            container.appendChild(pole);
+          }
+        }
+      }
+      function generateShips() {
+        var n = 1;
+        var m = 4;
+        for (var m = 4; m > 0; m--) {
+          for (var a = n; a > 0; a--) {
+            shipCreate(n, m);
+          }
+          n++;
+        }
+      }
+
+      function shipCreate(n, m) {
+        // console.log(gameMap);
+        // console.log(shipsAmount);
+        available = true;
+        while (available) {
+          var shipX = Math.floor(Math.random() * (mapSize - m + 1));
+          var shipY = Math.floor(Math.random() * (mapSize - m + 1));
+          var shipDirection = Math.floor(Math.random() * 2);
+
+          available = checkAvailability(shipX, shipY, shipDirection, m);
+        }
+        // 0 - poziomo, 1 - pionowo
+        updateTab(shipX, shipY, shipDirection, m);
+      }
+      function updateTab(x, y, direction, length) {
+        if (direction == 0) {
+          var i = JSON.parse(JSON.stringify(x));
+          for (var i = y; i < length + y; i++) {
+            tab[x][i] = 1;
+          }
+        } else {
+          var i = JSON.parse(JSON.stringify(y));
+          for (var i = x; i < length + x; i++) {
+            tab[i][y] = 1;
+          }
+        }
+        colorDivs(x, y, direction, length);
+      }
+      function colorDivs(x, y, direction, length) {
+        for (var i = 0; i < mapSize; i++) {
+          for (var j = 0; j < mapSize; j++) {
+            if (tab[i][j] == 1) {
+              document.getElementById(i + "_" + j).style.backgroundColor =
+                "black";
+            }
+          }
+        }
+        var tabTest = [...tab];
+        console.table(tabTest);
+      }
+      function checkAvailability(x, y, direction, length) {
+        try {
+          if (direction == 0) {
+            // Poziomo
+            for (var i = y - 1; i <= length + y; i++) {
+              if (x == 0) {
+                if (tab[x][i] == 1) {
+                  return true;
+                }
+              } else {
+                if (tab[x - 1][i] == 1) {
+                  return true;
+                }
+              }
+
+              if (x == 9) {
+                if (tab[x][i] == 1) {
+                  return true;
+                }
+              } else {
+                if (tab[x + 1][i] == 1) {
+                  return true;
+                }
+              }
+
+              if (tab[x][i] == 1) {
+                return true;
+              }
+              if (tab[x][i + 1] == 1) {
+                return true;
+              }
+            }
+            if (tab[x][y - 1] == 1) {
+              return true;
+            } else return false;
+          }
+          // --------------------------------
+          else if (direction == 1) {
+            // Pionowo
+            for (var i = x - 1; i < length + x; i++) {
+              if (i <= -1) {
+                if (tab[i + 1][y - 1] == 1) {
+                  return true;
+                }
+                if (tab[i + 1][y + 1] == 1) {
+                  return true;
+                }
+              } else {
+                if (tab[i][y - 1] == 1) {
+                  return true;
+                }
+                if (tab[i][y + 1] == 1) {
+                  return true;
+                }
+                if (tab[i][y] == 1) {
+                  return true;
+                }
+              }
+              if (i < 9) {
+                if (tab[i + 1][y] == 1) {
+                  return true;
+                }
+                if (tab[i + 1][y - 1] == 1) {
+                  return true;
+                }
+                if (tab[i + 1][y + 1] == 1) {
+                  return true;
+                }
+              }
+            }
+
+            if (tab?.[x - 1][y] != undefined && tab[x - 1][y] == 1) {
+              return true;
+            } else return false;
+          }
+        } catch (e) {
+          console.log(e);
+          return true;
+        }
+      }
+    </script>
+  </body>
+</html>
