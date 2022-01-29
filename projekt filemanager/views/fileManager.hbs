@@ -1,32 +1,33 @@
 <div id="fileManager">
-    <div id="sideBar">
-        <h1> FILEMANAGER</h1>
-    </div>
-    <div id="fileList">
-        <table>
-            <tr>
-                <th>id</th>
-                <th>obraz</th>
-                <th>name</th>
-                <th>size</th>
-                <th>type</th>
-                <th>-</th>
-                <th>-</th>
-                <th>-</th>
-            </tr>
-            {{#each filesArr}}
-            <tr>
-                <td>{{this.id}}</td>
-                <td><img src="/icons/{{this.img}}.png"> </td>
-                <td>{{this.name}}</td>
-                <td>{{this.size}}</td>
-                <td>{{this.type}}</td>
-                <td><a href="/delete"> Delete</a></td>
-                <td><a href="/info">Info</a></td>
-                <td><a href="/download">Download</a></td>
-            </tr>
-            {{/each}}
+  <div id="sideBar">
+    <h1> FILEMANAGER</h1>
+    <a href="/delete/?id=all" <u> Usun dane o plikach z tabeli </u></a>
+  </div>
+  <div id="fileList">
+    <table>
+      <tr>
+        <th>id</th>
+        <th>obraz</th>
+        <th>name</th>
+        <th>size</th>
+        <th>type</th>
+        <th>-</th>
+        <th>-</th>
+        <th>-</th>
+      </tr>
+      {{#each filesArr}}
+        <tr>
+          <td>{{this.id}}</td>
+          <td><img src="/icons/{{this.img}}.png" /> </td>
+          <td>{{this.name}}</td>
+          <td>{{this.size}}</td>
+          <td>{{this.type}}</td>
+          <td><a href="/delete/?id={{this.id}}"> Delete</a></td>
+          <td><a href="/info/?id={{this.id}}">Info</a></td>
+          <td><a href="/download/?path={{this.path}}">Download</a></td>
+        </tr>
+      {{/each}}
 
-        </table>
-    </div>
+    </table>
+  </div>
 </div>
