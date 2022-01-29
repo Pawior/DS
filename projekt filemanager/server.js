@@ -139,7 +139,7 @@ app.get("/download", function (req, res) {
   console.log(aPath);
   let path = aPath.split(`\\`);
   console.log(path);
-  let fileName = path.at(-1);
+  let fileName = path[path.length - 1];
   console.log(fileName);
   let file = `${__dirname}/static/upload/${fileName}`;
   console.log(file);
