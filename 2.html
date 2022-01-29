@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        #main {
+            display: flex;
+            /* flex-wrap: wrap; */
+            width: 100%;
+            height: 100vh;
+
+        }
+
+        #a {
+            width: 49%;
+            background-color: red;
+            height: 100%;
+        }
+
+        #vertical {
+            height: 100%;
+            width: 20px;
+        }
+
+
+        #b {
+            width: 49%;
+            background-color: green;
+            height: 100%;
+        }
+
+        .box {
+            color: white;
+            font-size: 78px;
+            text-align: center;
+            padding-top: 50px;
+        }
+    </style>
+    <script src="libs/jq.js"></script>
+    <script>
+        $(document).ready(() => {
+
+            // console.log(window.innerWidth)
+            $("#vertical").on("mousedown", function () {
+                $(window).on("mousemove", function (e) {
+
+                    let aW = e.clientX - 10
+                    let bW = window.innerWidth - aW
+                    // console.log(bW)
+                    $("#b").css("width", `${bW}px`)
+                    $("#a").css("width", `${aW}px`)
+                })
+            })
+
+            $(document).on("mouseup", function () {
+                $(window).off("mousemove")
+            })
+
+        })
+    </script>
+</head>
+
+<body>
+    <div id="main">
+        <div id="a" class="box">A</div>
+        <button id="vertical"></button>
+        <div id="b" class="box">B</div>
+    </div>
+</body>
+
+</html>

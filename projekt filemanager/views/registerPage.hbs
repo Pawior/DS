@@ -1,0 +1,18 @@
+<form action="/register" method="GET" name="fields" class="register">
+    <label> Login: <input type="text" name="log"> </label>
+    <label> Hasło: <input type="password" name="pass"> </label>
+    {{!-- <label> Wiek: <select name="fields"> </label> --}}
+    <label>Wiek: <input type="number" min="1" max="116" name="wiek"> </label>
+    <label>Czy jestes uczniem? <input type="checkbox" name="uczen"> </label>
+    <div class="plec"> <input type="radio" id="m" name="plec" value="plec">
+        <label for="plec">M</label>
+        <input type="radio" id="k" name="plec" value="plec">
+        <label for="plec">K</label>
+    </div>
+
+    {{!-- <option value="title">title</option>
+    <option value="authors">authors</option>
+    <option value="Lang">Lang</option> --}}
+    </select>
+    <button type="submit"> Submit</button>
+</form>
