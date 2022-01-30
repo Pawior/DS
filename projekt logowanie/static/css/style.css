@@ -44,3 +44,7 @@ li a {
   font-weight: bold !important;
   padding: 25px;
 }
+td {
+  border: 1px solid black;
+  padding: 2rem;
+}

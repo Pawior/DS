@@ -1,0 +1,21 @@
+<ul class="adminNav">
+  <li class="adminLi"><a href="/show">Show</a></li>
+  <li class="adminLi"><a href="/gender">Gender</a></li>
+  <li class="adminLi"><a href="/sort">Sort</a></li>
+</ul>
+<div class="showPagecontainer">
+  <table>
+    {{#each tab}}
+      <tr>
+        <td> id: {{this.id}}</td>
+        <td> user: {{this.login}} - {{this.pass}} </td>
+        <td>
+          uczen:
+          {{#if this.uczen}}&#9989 {{else}}&#10060 {{/if}}
+        </td>
+        <td> wiek: {{this.wiek}}</td>
+        <td> plec: {{this.plec}}</td>
+      </tr>
+    {{/each}}
+  </table>
+</div>

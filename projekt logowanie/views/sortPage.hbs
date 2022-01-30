@@ -1,0 +1,42 @@
+<ul class="adminNav">
+  <li class="adminLi"><a href="/show">Show</a></li>
+  <li class="adminLi"><a href="/gender">Gender</a></li>
+  <li class="adminLi"><a href="/sort">Sort</a></li>
+</ul>
+<div id="showContainer">
+  <form
+    action="/sort"
+    onchange="this.submit(); return false"
+    onsubmit="return false"
+    method="get"
+  >
+    {{#if sorting}}
+      <label>
+        <input type="radio" name="sort" value="rosnaco" checked />
+        rosnąco
+      </label>
+      <label>
+        <input type="radio" name="sort" value="malejaco" />
+        malejąco
+      </label>
+    {{else}}
+      <label>
+        <input type="radio" name="sort" value="rosnaco" />
+        rosnąco
+      </label>
+      <label>
+        <input type="radio" name="sort" value="malejaco" checked />
+        malejąco
+      </label>
+    {{/if}}
+  </form>
+  <table>
+    {{#each tab}}
+      <tr>
+        <td> id: {{this.id}}</td>
+        <td> user: {{this.login}} - {{this.pass}} </td>
+        <td> wiek: {{this.wiek}}</td>
+      </tr>
+    {{/each}}
+  </table>
+</div>

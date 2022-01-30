@@ -15,9 +15,25 @@ const context = {
   ],
 };
 var tab = [
-  { id: 1, log: "aaa", pass: "123", wiek: 10, uczen: "checked", plec: "m" },
+  { id: 1, login: "aaa", pass: "123", wiek: 10, uczen: "checked", plec: "m" },
+  {
+    id: 2,
+    login: "test",
+    pass: "123",
+    wiek: 20,
+    uczen: "unchecked",
+    plec: "k",
+  },
+  {
+    id: 3,
+    login: "ania",
+    pass: "aaa",
+    wiek: 30,
+    uczen: "checked",
+    plec: "k",
+  },
 ];
-
+let startId = 4;
 let isLogged = false;
 
 app.listen(PORT, function () {
@@ -61,20 +77,60 @@ app.post("/register", function (req, res) {
     uczen = "checked";
   } else uczen = "unchecked";
   let data = {
-    Login: req.body.login,
-    Pass: req.body.pass,
-    Age: parseInt(req.body.age),
-    Uczen: uczen,
-    Plec: req.body.plec,
+    id: startId,
+    login: req.body.login,
+    pass: req.body.pass,
+    wiek: parseInt(req.body.age),
+    uczen: uczen,
+    plec: req.body.plec,
   };
   tab.push(data);
   console.log(tab);
   isLogged = true;
+  startId++;
 });
 app.get("/login", function (req, res) {
   res.render("loginPage.hbs");
 });
+app.post("/login", function (req, res) {
+  console.log(req.body);
+  tab.forEach((item) => {
+    if (item.login == req.body.login) {
+      console.log("Zalogowano");
+      isLogged = true;
+    }
+    console.log(item.login);
+  });
+});
 app.get("/logout", function (req, res) {
   isLogged = false;
   res.redirect("/login");
+});
+app.get("/sort", function (req, res) {
+  console.log(req.query.sort);
+  let sorting = true;
+  sortedTab = [...tab];
+  if (req.query.sort == undefined || req.query.sort == "rosnaco") {
+    sorting = true;
+    sortedTab = [...tab].sort(function (a, b) {
+      return parseFloat(a.wiek) - parseFloat(b.wiek);
+    });
+  } else {
+    sorting = false;
+    sortedTab = [...tab].sort(function (a, b) {
+      return parseFloat(b.wiek) - parseFloat(a.wiek);
+    });
+  }
+
+  res.render("sortPage.hbs", { tab: sortedTab, sorting: sorting });
+});
+app.get("/show", function (req, res) {
+  let tabToShow = tab.map((item) => {
+    if (item.uczen == "unchecked" || item.uczen == "") {
+      return (item.uczen = "");
+    } else return (item.uczen = true);
+  });
+  console.log(tabToShow);
+  console.log(tab);
+  res.render("showPage.hbs", { tab: tab });
 });
