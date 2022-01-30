@@ -48,3 +48,6 @@ td {
   border: 1px solid black;
   padding: 2rem;
 }
+table {
+  margin: 30px;
+}

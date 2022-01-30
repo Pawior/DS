@@ -1,0 +1,19 @@
+<ul class="adminNav">
+  <li class="adminLi"><a href="/show">Show</a></li>
+  <li class="adminLi"><a href="/gender">Gender</a></li>
+  <li class="adminLi"><a href="/sort">Sort</a></li>
+</ul>
+<table>
+  {{#each maleTab}}
+    <tr>
+      <td> id: {{this.id}}</td>
+      <td> plec: {{this.plec}}</td></tr>
+  {{/each}}
+</table>
+<table>
+  {{#each femaleTab}}
+    <tr>
+      <td> id: {{this.id}}</td>
+      <td> plec: {{this.plec}}</td></tr>
+  {{/each}}
+</table>

@@ -73,21 +73,30 @@ app.get("/register", function (req, res) {
 app.post("/register", function (req, res) {
   console.log(req.body);
   let uczen = "";
-  if (req.body.uczen) {
-    uczen = "checked";
-  } else uczen = "unchecked";
-  let data = {
-    id: startId,
-    login: req.body.login,
-    pass: req.body.pass,
-    wiek: parseInt(req.body.age),
-    uczen: uczen,
-    plec: req.body.plec,
-  };
-  tab.push(data);
-  console.log(tab);
-  isLogged = true;
-  startId++;
+  let notExist = true;
+  tab.forEach((user) => {
+    if (user.login == req.body.login) {
+      notExist = false;
+      res.status(401).end("Taki login juz istniejes");
+    }
+  });
+  if (notExist) {
+    if (req.body.uczen) {
+      uczen = "checked";
+    } else uczen = "unchecked";
+    let data = {
+      id: startId,
+      login: req.body.login,
+      pass: req.body.pass,
+      wiek: parseInt(req.body.age),
+      uczen: uczen,
+      plec: req.body.plec,
+    };
+    tab.push(data);
+    console.log(tab);
+    isLogged = true;
+    startId++;
+  }
 });
 app.get("/login", function (req, res) {
   res.render("loginPage.hbs");
@@ -133,4 +142,18 @@ app.get("/show", function (req, res) {
   console.log(tabToShow);
   console.log(tab);
   res.render("showPage.hbs", { tab: tab });
+});
+app.get("/gender", function (req, res) {
+  var maleTab = tab.filter((val) => {
+    if (val.plec == "m") {
+      return val;
+    }
+  });
+  var femaleTab = tab.filter((val) => {
+    if (val.plec == "k") {
+      return val;
+    }
+  });
+  console.log(maleTab);
+  res.render("genderPage.hbs", { maleTab: maleTab, femaleTab: femaleTab });
 });
