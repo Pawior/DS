@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../libs/jq.js"></script>
+    <script src="../libs/three.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      #fovRange {
+        position: absolute;
+      }
+      #buttonContainer {
+        position: absolute;
+        margin: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <input type="range" id="fovRange" />
+      <div id="buttonContainer">
+        <button id="szczescian">szczescian</button>
+        <button id="sfera">sfera</button>
+        <button id="walec">walec</button>
+        <button id="stozek">stożek</button>
+      </div>
+    </div>
+    <script>
+      $(document).ready(function () {
+        /**--------------------------------------------
+         *               Inicjalizacja sceny
+         *---------------------------------------------**/
+        const scene = new THREE.Scene();
+        const axes = new THREE.AxesHelper(1000);
+        scene.add(axes);
+
+        /**----------------------
+         *    Tworzenie figur
+         *------------------------**/
+        let szczescianBtn = document.querySelector("#szczescian");
+        szczescianBtn.addEventListener("click", function () {
+          if (scene.getObjectByName("cube")) {
+            var cubeObject = scene.getObjectByName("cube");
+            scene.remove(cubeObject);
+            console.log("tutaj");
+          } else {
+            const geometry = new THREE.BoxGeometry(40, 40, 40);
+            const material = new THREE.MeshBasicMaterial({
+              color: 0xdba923,
+              side: THREE.DoubleSide,
+              wireframe: true,
+              transparent: true,
+              opacity: 0.5,
+            });
+            const cube = new THREE.Mesh(geometry, material);
+            cube.name = "cube";
+            scene.add(cube);
+          }
+        });
+        let sferaBtn = document.querySelector("#sfera");
+        sferaBtn.addEventListener("click", function () {
+          if (scene.getObjectByName("sphere")) {
+            var sphereObject = scene.getObjectByName("sphere");
+            scene.remove(sphereObject);
+            console.log("tutaj");
+          } else {
+            const geometry = new THREE.SphereGeometry(15, 32, 16);
+            const material = new THREE.MeshBasicMaterial({
+              color: 0x2edb42,
+              wireframe: true,
+            });
+            const sphere = new THREE.Mesh(geometry, material);
+            sphere.name = "sphere";
+            scene.add(sphere);
+          }
+        });
+        let stozek = document.querySelector("#stozek");
+        stozek.addEventListener("click", function () {
+          if (scene.getObjectByName("cylinder")) {
+            var cylinderObject = scene.getObjectByName("cylinder");
+            scene.remove(cylinderObject);
+            console.log("tutaj");
+          } else {
+            const geometry = new THREE.CylinderGeometry(0, 10, 20, 32);
+            const material = new THREE.MeshBasicMaterial({
+              color: 0xdb1851,
+              wireframe: true,
+            });
+            const cylinder = new THREE.Mesh(geometry, material);
+            cylinder.name = "cylinder";
+            scene.add(cylinder);
+          }
+        });
+        let walec = document.querySelector("#walec");
+
+        walec.addEventListener("click", function () {
+          if (scene.getObjectByName("walec")) {
+            var walecObject = scene.getObjectByName("walec");
+            scene.remove(walecObject);
+            console.log("tutaj");
+          } else {
+            console.log("else");
+            const geometry = new THREE.CylinderGeometry(5, 5, 20, 32);
+            const material = new THREE.MeshBasicMaterial({
+              color: 0xca44db,
+              wireframe: true,
+            });
+            const walec = new THREE.Mesh(geometry, material);
+            walec.name = "walec";
+            scene.add(walec);
+          }
+        });
+        /**----------------------
+         *    KAMERA
+         *------------------------**/
+        const camera = new THREE.PerspectiveCamera(
+          45, // kąt patrzenia kamery (FOV - field of view)
+          4 / 3, // proporcje widoku, powinny odpowiadać proporcjom naszego ekranu przeglądarki
+          0.1, // minimalna renderowana odległość
+          10000 // maksymalna renderowana odległość od kamery
+        );
+        camera.position.x = -200;
+        camera.position.y = 200;
+        camera.position.z = 200;
+        camera.position.set(100, 100, 100);
+        /**--------------------------------------------
+         *               Render
+         *---------------------------------------------**/
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0x0066ff);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        $("#root").append(renderer.domElement);
+
+        // nakierowanie kamery na punkt (0,0,0) w przestrzeni (zakładamy, że istnieje już scena)
+
+        camera.lookAt(scene.position);
+        let fovRangeJS = document.querySelector("#fovRange");
+        let fovValue = 60;
+        fovRangeJS.addEventListener("input", function () {
+          console.log(fovRangeJS.value);
+          fovValue = fovRangeJS.value;
+        });
+        /**----------------------
+         *    Funkcja renderująca
+         *------------------------**/
+        function render() {
+          //w tym miejscu ustalamy wszelkie zmiany w projekcie (obrót, skalę, położenie obiektów)
+          //np zmieniająca się wartość rotacji obiektu
+          camera.fov = fovValue;
+          camera.updateProjectionMatrix();
+          scene.rotation.y += 0.01;
+          requestAnimationFrame(render);
+          console.log("render leci");
+          //ciągłe renderowanie / wyświetlanie widoku sceny naszą kamerą
+          renderer.render(scene, camera);
+        }
+        // na koniec jednokrotne wykonanie powyższej funkcji
+        render();
+      });
+    </script>
+  </body>
+</html>
