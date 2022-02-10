@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      button {
+        background-color: #aa0f04; /* Green */
+        border: none;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="text" name="a" id="a" /><input type="text" name="b" id="b" />
+    <select name="coRobic" id="selectId">
+      <option value="+">suma</option>
+      <option value="-">roznica</option>
+      <option value="*">iloczyn</option>
+      <option value="/">iloraz</option>
+    </select>
+    <button type="submit" name="btn1" value="wyslij" id="btn">Submit</button>
+    <script>
+      let btn = document.querySelector("#btn");
+
+      btn.addEventListener("click", fetchIt);
+      function fetchIt() {
+        let a = document.querySelector("#a").value;
+        let b = document.querySelector("#b").value;
+        let znak = document.querySelector("#selectId").value;
+        const data = JSON.stringify({
+          a: a,
+          b: b,
+          coRobic: znak,
+        });
+        const options = {
+          method: "POST",
+          body: data,
+        };
+        fetch("/", options)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            alert(`${JSON.stringify(data, null, 5)}`);
+          })
+          .catch((error) => console.log(error));
+      }
+    </script>
+  </body>
+</html>
