@@ -1,27 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <form method="post" action="/">
-        <input type="text" name="a" /><input type="text" name="b" />
-        <select name="coRobic">
-            <option value="+">suma</option>
-            <option value="-">roznica</option>
-            <option value="*">iloczyn</option>
-            <option value="/">iloraz</option>
-        </select>
-        <button
-          type="submit"
-          name="btn1"
-          value="wyslij"
-        >
-          Submit
-        </button>
-    
-</body>
+    <style>
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      #colorBox {
+        width: 500px;
+        height: 500px;
+        background-color: rgba(0, 0, 0, 1);
+      }
+    </style>
+  </head>
+  <body>
+    <form method="post" action="/" id="form">
+      <input type="range" name="r" min="0" max="255" step="1" id="r" />
+      <input type="range" name="g" min="0" max="255" step="1" id="g" />
+      <input
+        type="range"
+        name="b"
+        min="0"
+        max="255"
+        step="1"
+        value="0"
+        id="b"
+      />
+      <input
+        type="range"
+        name="a"
+        min="0"
+        max="100"
+        step="1"
+        value="100"
+        id="a"
+      />
+      <button type="submit" name="btn1" value="wyslij">Submit</button>
+    </form>
+    <div id="colorBox"></div>
+    <script>
+      const form = document.querySelector("#form");
+      const colorBox = document.querySelector("#colorBox");
+      form.addEventListener("change", () => {
+        let r = document.querySelector("#r").value;
+        let g = document.querySelector("#g").value;
+        let b = document.querySelector("#b").value;
+        let a = document.querySelector("#a").value;
+        // console.log("zmieniam");
+        // console.log(document.querySelector("#r"));
+        // console.log(document.querySelector("#r").value);
+        const data = JSON.stringify({
+          r: r,
+          g: g,
+          b: b,
+          a: a,
+        });
+        console.log(data);
+        const postIt = async () => {
+          const response = await fetch("/", {
+            method: "POST",
+            body: data,
+          });
+          let result = await response.json();
+          console.log(result);
+          colorBox.style.backgroundColor = `rgba(${result.r},${result.g},${
+            result.b
+          },${result.a / 100})`;
+        };
+        postIt();
+      });
+    </script>
+  </body>
 </html>
