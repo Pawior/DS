@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../libs/jq.js"></script>
+    <script src="../libs/three.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+      }
+      #numDiv {
+        position: absolute;
+        width: 1000px;
+        height: 100vh;
+        font-size: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+      p {
+        position: absolute;
+        top: 50%; /* position the top  edge of the element at the middle of the parent */
+        left: 50%; /* position the left edge of the element at the middle of the parent */
+        transform: translate(-50%, -50%);
+        font-size: 15rem;
+        opacity: 0.5;
+        margin: 0;
+      }
+      #buttonContainer {
+        position: absolute;
+        margin: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="buttonContainer">
+        <button id="przybliz">przybliz</button>
+      </div>
+      <p id="num"></p>
+    </div>
+    <script>
+      $(document).ready(function () {
+        $(document).keydown(function (e) {
+          console.log(e.which);
+          document.querySelector("#num").innerHTML = e.which;
+        });
+        const scene = new THREE.Scene();
+        const axes = new THREE.AxesHelper(1000);
+        scene.add(axes);
+        const geometry = new THREE.BoxGeometry(40, 40, 40);
+        // const material = new THREE.MeshBasicMaterial({
+        //   side: THREE.DoubleSide, // dwustronny
+        //   map: new THREE.TextureLoader().load(
+        //     "https://upload.wikimedia.org/wikipedia/commons/7/72/Aleksander_Gierymski%2C_%C5%BByd%C3%B3wka_z_pomara%C5%84czami.jpg"
+        //   ), // plik tekstury
+        //   transparent: true, // przezroczysty / nie
+        //   opacity: 0.8, // stopień przezroczystości
+        // });
+        const materials = [];
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://www.tynker.com/minecraft/api/block?id=5a31a63f37b6859e5b8b4667&w=400&h=400&width=400&height=400&mode=contain&format=jpg&quality=75&cache=max&v=1513203263"
+            ),
+          })
+        );
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://www.tynker.com/minecraft/api/block?id=5a31a63f37b6859e5b8b4667&w=400&h=400&width=400&height=400&mode=contain&format=jpg&quality=75&cache=max&v=1513203263"
+            ),
+          })
+        );
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://wallpapercave.com/wp/wp8012874.jpg"
+            ),
+          })
+        );
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://wallpapercave.com/wp/wp8012874.jpg"
+            ),
+          })
+        );
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://www.tynker.com/minecraft/api/block?id=5a31a63f37b6859e5b8b4667&w=400&h=400&width=400&height=400&mode=contain&format=jpg&quality=75&cache=max&v=1513203263"
+            ),
+          })
+        );
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://www.tynker.com/minecraft/api/block?id=5a31a63f37b6859e5b8b4667&w=400&h=400&width=400&height=400&mode=contain&format=jpg&quality=75&cache=max&v=1513203263"
+            ),
+          })
+        );
+        const cube = new THREE.Mesh(geometry, materials);
+        cube.name = "cube";
+        scene.add(cube);
+
+        const camera = new THREE.PerspectiveCamera(
+          45, // kąt patrzenia kamery (FOV - field of view)
+          4 / 3, // proporcje widoku, powinny odpowiadać proporcjom naszego ekranu przeglądarki
+          0.1, // minimalna renderowana odległość
+          10000 // maksymalna renderowana odległość od kamery
+        );
+        camera.position.x = -200;
+        camera.position.y = 0;
+        camera.position.z = 200;
+        camera.position.set(100, 100, 100);
+        /**--------------------------------------------
+         *               Render
+         *---------------------------------------------**/
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0x0066ff);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        $("#container").append(renderer.domElement);
+
+        // nakierowanie kamery na punkt (0,0,0) w przestrzeni (zakładamy, że istnieje już scena)
+
+        camera.lookAt(scene.position);
+
+        /**----------------------
+         *    Funkcja renderująca
+         *------------------------**/
+        let przybliz = false;
+        let goUp = true;
+        $("#przybliz").click(() => {
+          przybliz = !przybliz;
+        });
+        function render() {
+          //w tym miejscu ustalamy wszelkie zmiany w projekcie (obrót, skalę, położenie obiektów)
+          //np zmieniająca się wartość rotacji obiektu
+          console.log(camera.position.y);
+          if (przybliz) {
+            if (goUp) {
+              camera.position.y += 0.3;
+              if (camera.position.y >= 100) goUp = false;
+            } else {
+              camera.position.y -= 0.3;
+              if (camera.position.y <= -100) goUp = true;
+            }
+          }
+          camera.fov = 60;
+          camera.updateProjectionMatrix();
+          //   scene.rotation.y += 0.01;
+          cube.rotation.y += 0.01;
+          requestAnimationFrame(render);
+          console.log("render leci");
+          //ciągłe renderowanie / wyświetlanie widoku sceny naszą kamerą
+          renderer.render(scene, camera);
+        }
+        // na koniec jednokrotne wykonanie powyższej funkcji
+        render();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../libs/jq.js"></script>
+    <script src="../libs/three.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+      }
+      #numDiv {
+        position: absolute;
+        width: 1000px;
+        height: 100vh;
+        font-size: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+      p {
+        position: absolute;
+        top: 50%; /* position the top  edge of the element at the middle of the parent */
+        left: 50%; /* position the left edge of the element at the middle of the parent */
+        transform: translate(-50%, -50%);
+        font-size: 15rem;
+        opacity: 0.5;
+        margin: 0;
+      }
+      #buttonContainer {
+        position: absolute;
+        margin: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="buttonContainer">
+        <button id="przybliz">gora/dol</button>
+      </div>
+      <p id="num"></p>
+    </div>
+    <script>
+      $(document).ready(function () {
+        $(document).keydown(function (e) {
+          console.log(e.which);
+          document.querySelector("#num").innerHTML = e.which;
+        });
+        const scene = new THREE.Scene();
+        const axes = new THREE.AxesHelper(1000);
+        scene.add(axes);
+        const geometry = new THREE.BoxGeometry(40, 40, 40);
+        const materials = [];
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://static.wikia.nocookie.net/minecraft_gamepedia/images/5/5d/TNT_%28side_texture%29_JE3_BE2.png"
+            ),
+          })
+        );
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://static.wikia.nocookie.net/minecraft_gamepedia/images/5/5d/TNT_%28side_texture%29_JE3_BE2.png"
+            ),
+          })
+        );
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://static.wikia.nocookie.net/minecraft_gamepedia/images/a/a3/TNT_%28top_texture%29_JE2_BE2.png"
+            ),
+          })
+        );
+        // https://wallpapercave.com/wp/wp8012874.jpg
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://static.wikia.nocookie.net/minecraft_gamepedia/images/a/a3/TNT_%28top_texture%29_JE2_BE2.png"
+            ),
+          })
+        );
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://static.wikia.nocookie.net/minecraft_gamepedia/images/5/5d/TNT_%28side_texture%29_JE3_BE2.png"
+            ),
+          })
+        );
+        materials.push(
+          new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide,
+            map: new THREE.TextureLoader().load(
+              "https://static.wikia.nocookie.net/minecraft_gamepedia/images/5/5d/TNT_%28side_texture%29_JE3_BE2.png"
+            ),
+          })
+        );
+        const cube = new THREE.Mesh(geometry, materials);
+        const cube2 = new THREE.Mesh(geometry, materials);
+        const cube3 = new THREE.Mesh(geometry, materials);
+        cube.name = "cube";
+        cube2.name = "cube2";
+        cube3.name = "cube3";
+        cube.position.y = 0;
+        cube2.position.y = 50;
+        cube3.position.y = -50;
+        scene.add(cube);
+        scene.add(cube2);
+        scene.add(cube3);
+        cube.name = "cube";
+        scene.add(cube);
+
+        const camera = new THREE.PerspectiveCamera(
+          45, // kąt patrzenia kamery (FOV - field of view)
+          16 / 9, // proporcje widoku, powinny odpowiadać proporcjom naszego ekranu przeglądarki
+          0.1, // minimalna renderowana odległość
+          10000 // maksymalna renderowana odległość od kamery
+        );
+        camera.position.x = -200;
+        camera.position.y = 0;
+        camera.position.z = 200;
+        camera.position.set(100, 100, 100);
+        /**--------------------------------------------
+         *               Render
+         *---------------------------------------------**/
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setClearColor(0x0066ff);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        $("#container").append(renderer.domElement);
+
+        // nakierowanie kamery na punkt (0,0,0) w przestrzeni (zakładamy, że istnieje już scena)
+
+        camera.lookAt(scene.position);
+
+        /**----------------------
+         *    Funkcja renderująca
+         *------------------------**/
+        let przybliz = false;
+        let goUp = true;
+        $("#przybliz").click(() => {
+          przybliz = !przybliz;
+        });
+        let toSpin = cube;
+        function render() {
+          //w tym miejscu ustalamy wszelkie zmiany w projekcie (obrót, skalę, położenie obiektów)
+          //np zmieniająca się wartość rotacji obiektu
+
+          if (przybliz) {
+            if (goUp) {
+              camera.position.y += 0.3;
+              if (camera.position.y >= 100) goUp = false;
+            } else {
+              camera.position.y -= 0.3;
+              if (camera.position.y <= -100) goUp = true;
+            }
+          }
+          toSpin.rotation.y += 0.01;
+          camera.fov = 60;
+          camera.updateProjectionMatrix();
+          //   scene.rotation.y += 0.01;
+          // cube.rotation.y += 0.01;
+          requestAnimationFrame(render);
+
+          //ciągłe renderowanie / wyświetlanie widoku sceny naszą kamerą
+          renderer.render(scene, camera);
+        }
+        // na koniec jednokrotne wykonanie powyższej funkcji
+        render();
+        const raycaster = new THREE.Raycaster(); // obiekt Raycastera symulujący "rzucanie" promieni
+        const mouseVector = new THREE.Vector2(); // ten wektor czyli pozycja w przestrzeni 2D na ekranie(x,y) wykorzystany będzie do określenie pozycji myszy na ekranie, a potem przeliczenia na pozycje 3D
+        let rotate = false;
+        $(document).mousedown(function (event) {
+          rotate = !rotate;
+          mouseVector.x = (event.clientX / $(window).width()) * 2 - 1;
+          mouseVector.y = -(event.clientY / $(window).height()) * 2 + 1;
+          raycaster.setFromCamera(mouseVector, camera);
+          const intersects = raycaster.intersectObjects(scene.children);
+          console.log(intersects.length);
+          if (intersects.length > 0) {
+            toSpin = intersects[0].object;
+
+            console.log(intersects);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

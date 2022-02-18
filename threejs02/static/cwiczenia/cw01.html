@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../libs/jq.js"></script>
+    <script src="../libs/three.js"></script>
+    <script>
+      $(document).ready(function () {
+        $(document).keydown(function (e) {
+          console.log(e.which);
+          document.querySelector("#num").innerHTML = e.which;
+        });
+      });
+    </script>
+    <style>
+      #numDiv {
+        position: absolute;
+        width: 1000px;
+        height: 100vh;
+        font-size: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+      }
+      p {
+        position: absolute;
+        top: 50%; /* position the top  edge of the element at the middle of the parent */
+        left: 50%; /* position the left edge of the element at the middle of the parent */
+        transform: translate(-50%, -50%);
+        font-size: 15rem;
+        opacity: 0.5;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <p id="num"></p>
+    </div>
+
+    <div id="numDiv"></div>
+  </body>
+</html>

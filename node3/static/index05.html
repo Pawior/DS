@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+</head>
+
+<body>
+    <!-- <form method="post" action="/upload" enctype="multipart/form-data">
+        <input type="file" required accept="text/*" name="TextToUpload">
+        <button type="submit"> Wyslij</button>
+    </form> -->
+    <input type="file" required accept="image/*" name="TextToUpload" id="fileInput">
+    <button id="btnUpload"> Upload</button>
+    <pre>
+        <div id="codeData">
+
+        </div>
+    </pre>
+    <script defer>
+        const btnUpload = document.querySelector("#btnUpload")
+        btnUpload.addEventListener("click", fetchIt)
+
+        function fetchIt() {
+            let fd = new FormData()
+
+            fd.append("file", document.getElementById("fileInput").files[0])
+
+            //body
+            const body = fd
+
+
+            //fetch
+            fetch("/postfile", {
+                    method: "post",
+                    body
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let dataObj = {
+                        name: `${data.name} \\n\n`,
+                        size: data.size,
+                        type: data.type
+                    }
+                    document.querySelector("#codeData").textContent += `Przesłane pliki: `
+                    document.querySelector("#codeData").textContent += `${JSON.stringify(dataObj, null, 4)}`
+
+
+                })
+                .catch(error => console.log(error))
+        }
+    </script>
+</body>
+
+</html>

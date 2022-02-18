@@ -1,0 +1,1 @@
+{"id":"c9ab21ed-267a-40a4-98e0-ce3f2d499c06","space":17824,"runtime":"nodejs14.x","name":"threejs02","path":"sfasak","project":"a00f4908","account":"144798365827","region":"eu-central-1","deps":["express@^4.17.2"],"envs":null,"public":true,"log_level":"debug","cron":""}

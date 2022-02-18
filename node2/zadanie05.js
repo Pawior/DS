@@ -8,19 +8,31 @@ const server = http.createServer((req, res) => {
       //wyświetlenie strony html
       fs.readFile("static/zadanie05.html", function (error, data) {
         if (error) {
-          res.writeHead(404, { "Content-Type": "text/html" });
+          res.writeHead(404, {
+            "Content-Type": "text/html"
+          });
           res.write("<h1>błąd 404 - nie ma pliku!<h1>");
           res.end();
         } else {
-          res.writeHead(200, { "Content-Type": "text/html" });
+          res.writeHead(200, {
+            "Content-Type": "text/html"
+          });
           res.write(data);
           res.end();
         }
       });
       break;
     case "POST":
-      // odbiór posta
-      serverResponse(req, res);
+      const form = formidable({});
+      form.uploadDir = "static/upload/"
+
+
+      form.parse(req, function (err, fields, files) {
+        res.writeHead(200, {
+          'content-type': 'text/html;charset=utf-8'
+        });
+        res.end('<h1>file uploaded!</h1>');
+      });
       break;
   }
 });
@@ -38,7 +50,9 @@ const serverResponse = (req, res) => {
     let znak = finishObj.coRobic;
     let wynik = eval(`${finishObj.a} ${znak} ${finishObj.b}`);
     finishObj.wynikWybranegoDzialania = wynik;
-    res.writeHead(200, { "Content-type": "text/plain;charset=utf-8" });
+    res.writeHead(200, {
+      "Content-type": "text/plain;charset=utf-8"
+    });
     res.end(JSON.stringify(finishObj, null, 5));
     console.log(finishObj);
   });
