@@ -7,61 +7,14 @@
     <title>Document</title>
     <script src="../libs/jq.js"></script>
     <script src="../libs/three.js"></script>
-
-    <style>
-      body {
-        margin: 0;
-      }
-
-      #numDiv {
-        position: absolute;
-        width: 1000px;
-        height: 100vh;
-        font-size: 50px;
-        margin-left: auto;
-        margin-right: auto;
-        left: 0;
-        right: 0;
-        text-align: center;
-      }
-
-      p {
-        position: absolute;
-        top: 50%;
-        /* position the top  edge of the element at the middle of the parent */
-        left: 50%;
-        /* position the left edge of the element at the middle of the parent */
-        transform: translate(-50%, -50%);
-        font-size: 15rem;
-        opacity: 0.5;
-        margin: 0;
-      }
-
-      #buttonContainer {
-        position: absolute;
-        margin: 40px;
-      }
-    </style>
   </head>
-
   <body>
-    <div id="container">
-      <p id="num"></p>
-    </div>
+    <div id="container"></div>
     <script>
       $(document).ready(function () {
         const scene = new THREE.Scene();
         const axes = new THREE.AxesHelper(1000);
         scene.add(axes);
-
-        /**======================
-         *    Light
-         *========================**/
-        const light = new THREE.DirectionalLight(0xffff00, 10);
-        light.position.set(1, 1, 1);
-        scene.add(light);
-        light.intensity = 3;
-
         const geometry = new THREE.BoxGeometry(40, 40, 40);
         const material = new THREE.MeshBasicMaterial({
           side: THREE.DoubleSide, // dwustronny
@@ -71,19 +24,9 @@
           transparent: true, // przezroczysty / nie
           opacity: 0.8, // stopień przezroczystości
         });
-        const lightMaterial = new THREE.MeshPhongMaterial({
-          color: 0xfdf609,
-          specular: 0xffffff,
-          shininess: 50,
-          side: THREE.DoubleSide,
-          map: new THREE.TextureLoader().load(
-            "https://upload.wikimedia.org/wikipedia/commons/7/72/Aleksander_Gierymski%2C_%C5%BByd%C3%B3wka_z_pomara%C5%84czami.jpg"
-          ),
-        });
-        const cube = new THREE.Mesh(geometry, lightMaterial);
+        const cube = new THREE.Mesh(geometry, material);
         cube.name = "cube";
         scene.add(cube);
-
         const camera = new THREE.PerspectiveCamera(
           45, // kąt patrzenia kamery (FOV - field of view)
           16 / 9, // proporcje widoku, powinny odpowiadać proporcjom naszego ekranu przeglądarki
@@ -93,23 +36,12 @@
         camera.position.x = -200;
         camera.position.y = 200;
         camera.position.z = 200;
-        camera.position.set(100, 100, 100);
-        /**--------------------------------------------
-         *               Render
-         *---------------------------------------------**/
+        // camera.position.set(30, 30, 30);
+
         const renderer = new THREE.WebGLRenderer();
-        renderer.setClearColor(0xfff2cc);
+        renderer.setClearColor(0x0066ff);
         renderer.setSize(window.innerWidth, window.innerHeight);
         $("#container").append(renderer.domElement);
-
-        // nakierowanie kamery na punkt (0,0,0) w przestrzeni (zakładamy, że istnieje już scena)
-
-        camera.lookAt(scene.position);
-
-        /**----------------------
-         *    Funkcja renderująca
-         *------------------------**/
-
         function render() {
           //w tym miejscu ustalamy wszelkie zmiany w projekcie (obrót, skalę, położenie obiektów)
           //np zmieniająca się wartość rotacji obiektu
