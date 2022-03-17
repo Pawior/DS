@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <input type="range" id="liczba1" name="liczba1" />
+        <input type="range" id="liczba2" name="liczba2" />
+        <select name="select">
+          <option value="+">+</option>
+          <option value="-">-</option>
+          <option value="*">*</option>
+          <option value="/">/</option>
+        </select>
+        <input type="button" value="Wyslij"></input>
+        <button id="btnSend"> send</button>
+        <h2 id="red">red: </h2>
+        <h2 id="blue">blue: </h2>
+        <script defer>
+            const btnSend = document.querySelector("#btnSend");
+            btnSend.addEventListener("click",fetchIt);
+            function fetchIt(){
+                let red = document.getElementById("liczba1").value
+                let blue = document.getElementById("liczba2").value
+                let data = {
+                    "red": red,
+                    "blue": blue
+                }
+                const options = {
+                    method: "POST",
+                    body: JSON.stringify(data)
+                }
+                fetch("/", options)
+                .then(response => response.json())
+                .then( data => {
+                    console.log(data);
+                    console.log(data.red);
+                    document.getElementById("red").innerHTML += `${data.red}`
+                    document.getElementById("blue").innerHTML += data.blue
+                 })
+            }
+        </script>
+</body>
+</html>

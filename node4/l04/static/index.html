@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <button id="readDir"> Czytaj zawartość katalogu </button>
+    <div id="data">
+
+    </div>
+    <script>
+        const btnRead = document.querySelector("#readDir")
+        const dataDiv = document.querySelector("#data")
+        const body = ""
+        btnRead.addEventListener("click", () => {
+            console.log("gfhgf")
+            fetch("/fetch", { method: "GET" })
+                .then(response => response.json())
+                .then(data => dataDiv.innerHTML = JSON.stringify(data, null, 5))
+                .catch(error => console.log(error))
+
+        })
+    </script>
+</body>
+
+</html>

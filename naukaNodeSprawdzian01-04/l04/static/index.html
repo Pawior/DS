@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+      </head>
+      <body>
+        <input
+          type="file"
+          required
+          accept="image/*"
+          name="fileInput"
+          id="fileInput"
+        />
+        <button id="btnSend">Wyslij</button>
+        <img id="obrazek" src=""> </img>
+        <img id="obrazek2" src="./static/upload/tux.png" />
+        <img id="obrazek3" src="/upload/tux.png" />
+        <img id="obrazek4" src="tux.png" />
+        <script>
+          let btnSend = document.querySelector("#btnSend");
+          btnSend.onclick = function fetchIt() {
+            console.log("do this");
+            let fd = new FormData();
+
+            fd.append("file", document.getElementById("fileInput").files[0]);
+
+            //body
+            const body = fd;
+
+            //fetch
+            fetch("/postfile", { method: "post", body })
+              .then((response) => response.json())
+              .then((data) => {
+                  console.log(data)
+                  console.log(data.ogNazwa)
+
+                  document.getElementById("obrazek").src = `./upload/${data.ogNazwa}`;
+                  console.log(data)
+
+                })
+              .catch((error) => console.log(error));
+          };
+        </script>
+      </body>
+    </html>
+  </body>
+</html>
