@@ -1,9 +1,9 @@
 var express = require("express");
 var app = express();
 const fs = require("fs");
+var PORT = 3000;
 app.use(express.static("static")); // serwuje stronę index.html
 app.use(express.static("static/cwiczenia")); // serwuje pozostałe pliki, czyli ćwiczenia
-var PORT = 3000;
 // przykładowy get obsługujący żądanie Ajax-a
 
 const filesArr = ["cw03.html"];
