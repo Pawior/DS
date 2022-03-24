@@ -1,7 +1,7 @@
 var express = require("express");
 const fs = require("fs");
 var app = express();
-const PORT = 3000;
+const PORT = 5000;
 
 app.use(express.static("static"));
 app.use(express.static("static/pages"));
@@ -17,18 +17,26 @@ const filesArr = [
   "index03.html",
 ];
 
+// app.get("/", function (req, res) {
+//   fs.readdir(__dirname, function (err, files) {
+//     if (err) {
+//       return console.log(err);
+//     }
+//     let strReturn = "";
+//     filesArr.forEach(function (file) {
+//       strReturn += `<a href="/pages/${file}"> ${file}</a> <br />`;
+//     });
+//     return res.send(strReturn);
+//     console.log(files);
+//   });
+// });
+
 app.get("/", function (req, res) {
-  fs.readdir(__dirname, function (err, files) {
-    if (err) {
-      return console.log(err);
-    }
-    let strReturn = "";
-    filesArr.forEach(function (file) {
-      strReturn += `<a href="/pages/${file}"> ${file}</a> <br />`;
-    });
-    return res.send(strReturn);
-    console.log(files);
+  let strReturn = "";
+  filesArr.forEach(function (file) {
+    strReturn += `<a href="/pages/${file}"> ${file}</a> <br />`;
   });
+  return res.send(strReturn);
 });
 
 app.get("/pages/indexTest.html", function (req, res) {

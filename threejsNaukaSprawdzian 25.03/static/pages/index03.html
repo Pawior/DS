@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="../libs/three.js"></script>
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: sans-serif;
+      }
+      #range {
+        top: 10px;
+        left: 10px;
+        position: absolute;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <input type="range" id="range" min="0" max="2000" />
+    </div>
+    <script>
+      window.addEventListener("load", function () {
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(
+          45, // kąt patrzenia kamery (FOV - field of view)
+          16 / 9, // proporcje widoku, powinny odpowiadać proporcjom ekranu przeglądarki użytkownika
+          0.1, // minimalna renderowana odległość
+          10000 // maksymalna renderowana odległość od kamery
+        );
+        // renderer wykorzystujący WebGL - działa stabilnie na wszystkich
+        // najnowszych przeglądarkach zarówno desktopowych jak mobilnych
+
+        const renderer = new THREE.WebGLRenderer();
+
+        // kolor tła sceny - uwaga na prefix 0x a nie #
+
+        renderer.setClearColor(0x0066ff);
+
+        // ustal rozmiary renderowanego okna w px (szer, wys)
+
+        renderer.setSize(500, 500);
+
+        // dodanie renderera do diva, który istnieje na scenie
+
+        document.querySelector("#root").append(renderer.domElement);
+        camera.position.x = -200;
+        camera.position.y = 200;
+        camera.position.z = 200;
+        camera.fov = 50;
+
+        // nakierowanie kamery na punkt (0,0,0) w przestrzeni (zakładamy, że istnieje już scena)
+
+        camera.lookAt(scene.position);
+
+        // kluczowy element - animacja
+
+        const axes = new THREE.AxesHelper(1000);
+        scene.add(axes);
+
+        const geometry = new THREE.BoxGeometry(5, 5, 5);
+        // const material = new THREE.MeshBasicMaterial({
+        //   color: 0x8888ff,
+        //   side: THREE.DoubleSide,
+        //   wireframe: false,
+        //   transparent: false,
+        //   opacity: 0.5,
+        // });
+        const material = new THREE.MeshPhongMaterial({
+          color: 0xff0000,
+          specular: 0xffffff,
+          shininess: 50,
+          side: THREE.DoubleSide,
+          map: new THREE.TextureLoader().load("mats/test.jpg"),
+        });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+        const group = new THREE.Group();
+
+        function createCubes() {
+          let x = -25;
+          let y = -25;
+          let z = -25;
+          for (let i = 0; i < 5; i++) {
+            for (let j = 0; j < 5; j++) {
+              for (let k = 0; k < 5; k++) {
+                // let cube = new THREE.Mesh(geometry, material);
+                let copy = cube.clone();
+                copy.position.set(x, y, z);
+                group.add(copy);
+                y += 10;
+              }
+              y = -25;
+              x += 10;
+            }
+            x = -25;
+            z += 10;
+          }
+        }
+        createCubes();
+        scene.add(group);
+        group.scale.set(2, 2, 2);
+
+        let objToRotate;
+        const raycaster = new THREE.Raycaster(); // obiekt Raycastera symulujący "rzucanie" promieni
+        const mouseVector = new THREE.Vector2(); // ten wektor czyli pozycja w przestrzeni 2D na ekranie(x,y) wykorzystany będzie do określenie pozycji myszy na ekranie, a potem przeliczenia na pozycje 3D
+        document.addEventListener("mousedown", function (e) {
+          mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
+          mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
+          raycaster.setFromCamera(mouseVector, camera);
+          const intersects = raycaster.intersectObjects(scene.children);
+          console.log(intersects.length);
+          if (intersects.length > 0) {
+            // zerowy w tablicy czyli najbliższy kamery obiekt to ten, którego potrzebujemy:
+            console.log(intersects[0].object);
+            objToRotate = intersects[0].object;
+          } else {
+            objToRotate = null;
+          }
+        });
+
+        /**--------------------------------------------
+         *               Light
+         *---------------------------------------------**/
+
+        const light = new THREE.SpotLight(0xffff00, 10);
+        light.position.set(1, 100, 1);
+        scene.add(light);
+
+        /**--------------------------------------------
+         *               Render
+         *---------------------------------------------**/
+        let angle = 20;
+        function render() {
+          //w tym miejscu ustalamy wszelkie zmiany w projekcie (obrót, skalę, położenie obiektów)
+          //np zmieniająca się wartość rotacji obiektu
+
+          //mesh.rotation.y += 0.01;
+
+          //wykonywanie funkcji bez końca, ok 60 fps jeśli pozwala na to wydajność maszyny
+          if (objToRotate) {
+            objToRotate.rotation.x += 0.1;
+          }
+          requestAnimationFrame(render);
+          console.log("render leci");
+          angle += 0.001;
+          camera.position.z = 200 * Math.cos(angle);
+          camera.position.x = 200 * Math.sin(angle);
+          camera.lookAt(scene.position);
+          camera.updateProjectionMatrix();
+
+          renderer.render(scene, camera);
+        }
+        onWindowResize();
+        let range = document.querySelector("#range");
+        range.addEventListener("input", function () {
+          resizeCubes(range.value);
+        });
+        resizeCubes = (val) => {
+          val /= 1000;
+          group.children.forEach((child) => {
+            child.scale.set(val, val, val);
+          });
+        };
+        window.addEventListener("resize", onWindowResize, false);
+
+        function onWindowResize() {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        render();
+      });
+    </script>
+  </body>
+</html>

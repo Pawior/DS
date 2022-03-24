@@ -22,7 +22,7 @@
   </head>
   <body>
     <div id="root">
-      <input type="range" id="range" min="0" max="1000" />
+      <input type="range" id="range" min="0" max="2000" />
     </div>
   </body>
   <script>
@@ -69,7 +69,7 @@
       const material = new THREE.MeshBasicMaterial({
         color: 0x8888ff,
         side: THREE.DoubleSide,
-        wireframe: true,
+        wireframe: false,
         transparent: false,
         opacity: 0.5,
       });
@@ -100,9 +100,29 @@
       createCubes();
       scene.add(group);
       group.scale.set(2, 2, 2);
+
+      let objToRotate;
+      const raycaster = new THREE.Raycaster(); // obiekt Raycastera symulujący "rzucanie" promieni
+      const mouseVector = new THREE.Vector2(); // ten wektor czyli pozycja w przestrzeni 2D na ekranie(x,y) wykorzystany będzie do określenie pozycji myszy na ekranie, a potem przeliczenia na pozycje 3D
+      document.addEventListener("mousedown", function (e) {
+        mouseVector.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouseVector, camera);
+        const intersects = raycaster.intersectObjects(scene.children);
+        console.log(intersects.length);
+        if (intersects.length > 0) {
+          // zerowy w tablicy czyli najbliższy kamery obiekt to ten, którego potrzebujemy:
+          console.log(intersects[0].object);
+          objToRotate = intersects[0].object;
+        } else {
+          objToRotate = null;
+        }
+      });
+
       /**--------------------------------------------
        *               Render
        *---------------------------------------------**/
+      let angle = 20;
       function render() {
         //w tym miejscu ustalamy wszelkie zmiany w projekcie (obrót, skalę, położenie obiektów)
         //np zmieniająca się wartość rotacji obiektu
@@ -110,9 +130,17 @@
         //mesh.rotation.y += 0.01;
 
         //wykonywanie funkcji bez końca, ok 60 fps jeśli pozwala na to wydajność maszyny
-
+        if (objToRotate) {
+          objToRotate.rotation.x += 0.1;
+        }
         requestAnimationFrame(render);
         console.log("render leci");
+        angle += 0.001;
+        camera.position.z = 200 * Math.cos(angle);
+        camera.position.x = 200 * Math.sin(angle);
+        camera.lookAt(scene.position);
+        camera.updateProjectionMatrix();
+
         renderer.render(scene, camera);
       }
       onWindowResize();
