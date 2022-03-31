@@ -1,69 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../libs/three.js"></script>
+    <script src="../libs/jq.js"></script>
+    <script src="../scripts/Main.js"></script>
+    <script src="../scripts/Game.js"></script>
+    <script src="../scripts/Net.js"></script>
+    <script src="../scripts/Ui.js"></script>
+    <script src="../scripts/Pionek.js"></script>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <script src="../libs/three.js"></script>
-  <script src="../scripts/Main.js"></script>
-  <script src="../scripts/Game.js"></script>
-  <script src="../scripts/Net.js"></script>
-  <script src="../scripts/Ui.js"></script>
-  <script src="../scripts/Pionek.js"></script>
+    <style>
+      * {
+        font-family: sans-serif;
+        margin: 0;
+        padding: 0;
+      }
 
-  <style>
-    * {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 0;
-    }
+      #loginDiv {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-content: flex-end;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 20px;
+      }
 
-    #loginDiv {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      align-content: flex-end;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 20px;
-    }
+      #statusBar {
+        background-color: rgb(157, 191, 207);
+        border-bottom: 5px solid rgb(66, 63, 63);
+        position: absolute;
+        height: 80px;
+        width: 100%;
+        top: 0%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
 
-    #statusBar {
-      background-color: rgb(157, 191, 207);
-      border-bottom: 5px solid rgb(66, 63, 63);
-      position: absolute;
-      height: 80px;
-      width: 100%;
-      top: 0%;
-      display: flex;
-      justify-content: center;
-      flex-direction: column;
-    }
+      #statusBar-hi {
+        margin-left: 20px;
+      }
 
-    #statusBar-hi {
-      margin-left: 20px;
-    }
+      #statusBar-usersError {
+        margin-left: 20px;
+      }
+      #loginDiv {
+        background-color: rgba(255, 170, 0, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0);
+      }
+    </style>
+  </head>
 
-    #statusBar-usersError {
-      margin-left: 20px;
-    }
-  </style>
-</head>
-
-<body>
-  <div id="root">
-    <div id="statusBar">
-      <h2 id="statusBar-hi"></h2>
-      <h3 id="statusBar-usersError"> </h3>
+  <body>
+    <div id="root">
+      <div id="statusBar">
+        <h2 id="statusBar-hi"></h2>
+        <h3 id="statusBar-usersError"></h3>
+      </div>
+      <div id="loginDiv"></div>
     </div>
-    <div id="loginDiv"></div>
-  </div>
-  <!-- <script defer>
+    <!-- <script defer>
       let game;
       let net;
       let ui;
@@ -73,6 +77,5 @@
         net = new Net();
       };
     </script> -->
-</body>
-
+  </body>
 </html>
