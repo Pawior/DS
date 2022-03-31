@@ -26,6 +26,25 @@ class Net {
       .then((data) => {
         document.querySelector("#loginDiv").style.display = "none";
         document.querySelector("#statusBar-hi").innerHTML = "Hi " + data.user;
+        const checkUsersInterval = setInterval(() => {
+          fetch("/checkUsers", {
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data)
+              if (data) {
+                console.log(checkUsersInterval)
+                clearInterval(checkUsersInterval);
+                document.querySelector("#usersError").style.display = "none"
+              } else {
+                document.querySelector("#statusBar-usersError").innerHTML = "<p id='usersError'> Nieprawidłowa ilość userów</p>"
+              }
+            })
+        }, 500);
         console.log(data);
       })
       .catch((err) => console.log(err));

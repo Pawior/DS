@@ -34,3 +34,10 @@ app.post("/post", function (req, res) {
   console.log(users);
   res.send(req.body);
 });
+app.post("/checkUsers", function (req, res) {
+  if (users.length == 2) {
+    res.send(true)
+  } else {
+    res.send(false)
+  }
+})

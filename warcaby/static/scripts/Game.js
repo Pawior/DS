@@ -34,6 +34,7 @@ class Game {
     this.scene.add(axes);
 
     this.createBoard();
+    this.createPionek();
     this.render(); // wywołanie metody render
   }
 
@@ -59,18 +60,34 @@ class Game {
       arr.forEach((elem, index) => {
         let tile;
         if (elem == 1) {
-          tile = new THREE.Mesh(geometry, materialWhite);
-        } else if (elem == 0) {
           tile = new THREE.Mesh(geometry, materialBlack);
+        } else if (elem == 0) {
+          tile = new THREE.Mesh(geometry, materialWhite);
         }
         tile.position.set(tileX * 10, 0, z);
         this.scene.add(tile);
         tileX++;
-        console.log(tileX);
       });
       z = (i + 1) * 10;
     });
   };
+
+  createPionek = () => {
+    let z = 0;
+    this.pionki.forEach((arr, i) => {
+      let tileX = -3.5;
+      arr.forEach((elem, index) => {
+        if (elem == 1) {
+          let pionek = new Pionek()
+          pionek.setColor(0xffffff);
+          pionek.position.set(tileX * 10, 2, z);
+          this.scene.add(pionek);
+        }
+        tileX++;
+      })
+      z = (i + 1) * 10;
+    })
+  }
 
   render = () => {
     requestAnimationFrame(this.render);
