@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container {
+            display: flex;
+            justify-content: space-between;
+            align-content: stretch;
+        }
+
+        tr,
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div>
+            <h2> Dane pojazdu: </h2>
+            <label> ubezpieczony <input type="checkbox" name="ubezpieczony" id="ubezpieczony"> </label>
+            <label>benzyna <input type="checkbox" name="benzyna" id="benzyna">> </label>
+            <label>uszkodzony <input type="checkbox" name="uszkodzony" id="uszkodzony">> </label>
+            <label>naped <input type="checkbox" name="naped" id="naped">> </label>
+            <button id="btnSend"> Wyslij</button>
+        </div>
+        <div>
+            <h2> Wszystkie pojazdy:</h2>
+            <table id="tabela">
+                <tr>
+                    <th></th>
+                    <th>ubezpieczony</th>
+                    <th>benzyna</th>
+                    <th>uszkodzony</th>
+                    <th>naped4x4</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script>
+        const btnSend = document.querySelector("#btnSend");
+
+        const fetchIt = () => {
+            let ubezpieczony = document.querySelector("#ubezpieczony").checked;
+            let benzyna = document.querySelector("#benzyna").checked;
+            let uszkodzony = document.querySelector("#uszkodzony").checked;
+            let naped = document.querySelector("#naped").checked;
+            console.log(ubezpieczony)
+            console.log(naped)
+            const data = JSON.stringify({
+                ubezpieczony: ubezpieczony == true ? "TAK" : "NIE",
+                benzyna: benzyna == true ? "TAK" : "NIE",
+                uszkodzony: uszkodzony == true ? "TAK" : "NIE",
+                naped: naped == true ? "TAK" : "NIE"
+            });
+            const options = {
+                method: "POST",
+                body: data,
+            };
+            fetch("/", options).then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    // alert(`${JSON.stringify(data, null, 5)}`);
+                    let dataKeys = Object.keys(data)
+                    let dataValues = Object.values(data)
+                    console.log(dataKeys)
+                    console.log(dataValues)
+                    objArr = data.docsy
+                    console.log(objArr)
+                    const tabela = document.querySelector("#tabela")
+                    let ctr = 0;
+                    data.forEach(element => {
+                        let tr = document.createElement("tr")
+                        let td = document.createElement("td")
+                        td.innerHTML = ctr;
+                        tr.append(td)
+                        ctr++;
+                        let elementId = "";
+                        for (let key in element) {
+                            if (key == "_id") {
+                                elementId = element[key];
+                            } else {
+                                let td = document.createElement("td")
+                                td.innerHTML = element[key];
+                                // console.log(key, element[key])
+                                tr.append(td)
+                            }
+                        }
+                        let td2 = document.createElement("td")
+                        td2.innerHTML = `<button onclick="deleteFetch('${elementId}')" id="${elementId}"> Usun </button>`;
+                        tr.append(td2)
+                        tr.setAttribute('id', elementId);
+                        tabela.append(tr)
+                    });
+                })
+        }
+        const deleteFetch = (elementId) => {
+            console.log(elementId)
+            const data = JSON.stringify({
+                id: elementId
+            });
+            const options = {
+                method: "POST",
+                body: data,
+            };
+            fetch("/", options).then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+                    // fetchIt();
+                    let tr = document.querySelector(`#${elementId}`)
+                    tr.remove();
+                })
+                .catch((error) => console.log(error));
+
+        }
+        btnSend.addEventListener("click", fetchIt)
+    </script>
+
+</body>
+
+</html>
