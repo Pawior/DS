@@ -1,4 +1,3 @@
-
 class Net {
   constructor() {
     this.init();
@@ -36,17 +35,36 @@ class Net {
           })
             .then((response) => response.json())
             .then((data) => {
-              console.log(data)
-              if (data) {
-                console.log(checkUsersInterval)
+              console.log(data);
+              if (data.arrLen == 2) {
+                console.log(checkUsersInterval);
                 clearInterval(checkUsersInterval);
-                if (document.querySelector("#usersErorr")) {
-                  document.querySelector("#usersError").style.display = "none"
+                if (document.querySelector("#usersError")) {
+                  document.querySelector("#usersError").style.display = "none";
                 }
+                document.querySelector("#loginDiv-waiting").style.display =
+                  "none";
+              } else if (data.arrLen == 1) {
+                console.log("modal wchodzi");
+                document.querySelector("#statusBar-usersError").innerHTML =
+                  "<p id='usersError'> Nieprawidłowa ilość userów</p>";
+                document.querySelector("#loginDiv-waiting").style.display =
+                  "block";
+                // document.querySelector("#root").style.pointerEvents = "none";
+                document.querySelector(".loginDiv-modal").addEventListener(
+                  "click",
+                  function (event) {
+                    event.stopPropagation();
+                  },
+                  true
+                );
               } else {
-                document.querySelector("#statusBar-usersError").innerHTML = "<p id='usersError'> Nieprawidłowa ilość userów</p>"
+                // document.querySelector("#statusBar-usersError").innerHTML =
+                //   "<p id='usersError'> Nieprawidłowa ilość userów</p>";
+                document.querySelector("#loginDiv-tooMuch").style.display =
+                  "block";
               }
-            })
+            });
         }, 500);
       })
       .catch((err) => console.log(err));

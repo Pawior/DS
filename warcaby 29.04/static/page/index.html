@@ -56,6 +56,34 @@
         background-color: rgba(255, 170, 0, 0.7);
         border: 1px solid rgba(255, 255, 255, 0);
       }
+      .loginDiv-modal {
+        display: none; /* Hidden by default */
+        position: absolute; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0); /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+      }
+      .loginDiv-content {
+        left: 50%;
+        top: 50%;
+        position: absolute;
+        background-color: #2a8cb9;
+        margin: auto;
+        transform: translate(-50%, -50%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 100px;
+        border: 1px solid #888;
+        width: 80%;
+        height: 40%;
+        pointer-events: none;
+      }
     </style>
   </head>
 
@@ -64,6 +92,16 @@
       <div id="statusBar">
         <h2 id="statusBar-hi"></h2>
         <h3 id="statusBar-usersError"></h3>
+      </div>
+      <div id="loginDiv-waiting" class="loginDiv-modal">
+        <div id="loginDiv-waiting-content" class="loginDiv-content">
+          <p>Za mało graczy</p>
+        </div>
+      </div>
+      <div id="loginDiv-tooMuch" class="loginDiv-modal">
+        <div id="loginDiv-tooMuch-content" class="loginDiv-content">
+          <p>Za dużo graczy</p>
+        </div>
       </div>
       <div id="loginDiv"></div>
     </div>

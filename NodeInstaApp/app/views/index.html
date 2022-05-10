@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            font-family: sans-serif;
+            margin: 10px;
+        }
+
+        #container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        select {
+            width: 250px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+
+        <label for="animals">Choose a animal:</label>
+
+        <select name="animals" id="animals" size="5">
+            <option value="dog">dog</option>
+            <option value="cow">cow</option>
+            <option value="cat">cat</option>
+        </select>
+        <label for="color">Choose a color:</label>
+        <select name="color" id="color" size="5">
+            <option value="yellow">yellow</option>
+            <option value="black">black</option>
+            <option value="white">white</option>
+        </select>
+        <select name="animalsList" id="animalsList" size="5">
+        </select>
+    </div>
+    <div id="btnsDiv">
+        <button id="btnAdd">Add</button>
+        <button id="btnGet">Get All</button>
+        <button id="btnDelete">Delete Selected</button>
+        <button id="btnUpdate">Update Selected</button>
+    </div>
+    <script>
+        const btnAdd = document.querySelector("#btnAdd")
+        const btnDelete = document.querySelector("#btnDelete")
+        const btnUpdate = document.querySelector("#btnUpdate")
+        const btnGetAll = document.querySelector("#getAllFunction")
+
+        const addFunction = () => {
+            let name = document.querySelector("#animals").value
+            let color = document.querySelector("#color").value
+
+            let body = {
+                "name": name,
+                "color": color
+            }
+
+            const options = {
+                method: "POST",
+                body: JSON.stringify(body)
+            }
+
+
+            fetch("/add", options).then(response => response.json())
+                .then((data) => {
+                    let animalsList = document.querySelector("#animalsList")
+                    animalsList.innerHTML = ""
+                    let ctr = 0
+                    data.forEach((element, idx) => {
+                        var opt = document.createElement('option');
+                        opt.value = idx;
+                        opt.innerHTML = `${idx}. ${element.color} ${element.name}`;
+                        animalsList.appendChild(opt);
+
+                    });
+                    console.log(data)
+                })
+        }
+
+        const deleteFunction = () => {
+            let id = document.querySelector("#animalsList").value
+            let body = {
+                "id": id
+            }
+
+            const options = {
+                method: "POST",
+                body: JSON.stringify(body)
+            }
+            fetch("/delete", options).then(response => response.json())
+                .then((data) => {
+                    let animalsList = document.querySelector("#animalsList")
+                    animalsList.innerHTML = ""
+                    let ctr = 0
+                    data.forEach((element, idx) => {
+                        var opt = document.createElement('option');
+                        opt.value = idx;
+                        opt.innerHTML = `${idx}. ${element.color} ${element.name}`;
+                        animalsList.appendChild(opt);
+
+                    });
+                    console.log(data)
+                })
+        }
+
+        const updateFunction = () => {
+            let id = document.querySelector("#animalsList").value
+
+            let body = {
+                "id": id
+            }
+
+            const options = {
+                method: "POST",
+                body: JSON.stringify(body)
+            }
+
+            fetch("/update", options).then(response => response.json())
+                .then((data) => {
+                    let animalsList = document.querySelector("#animalsList")
+                    animalsList.innerHTML = ""
+                    let ctr = 0
+                    data.forEach((element, idx) => {
+                        var opt = document.createElement('option');
+                        opt.value = idx;
+                        opt.innerHTML = `${idx}. ${element.color} ${element.name}`;
+                        animalsList.appendChild(opt);
+
+                    });
+                    console.log(data)
+                })
+        }
+
+        const getAllFunc = () => {
+            let body = {
+                "getall": "tak"
+            }
+
+            const options = {
+                method: "POST",
+                body: JSON.stringify(body)
+            }
+            fetch("/getall", options).then(response => response.json())
+                .then((data) => {
+                    alert(data);
+                    console.log(data)
+                })
+        }
+
+        btnAdd.addEventListener("click", addFunction)
+        btnDelete.addEventListener("click", deleteFunction)
+        btnUpdate.addEventListener("click", updateFunction)
+        btnGetAll.addEventListener("click", getAllFunc)
+
+    </script>
+
+
+</body>
+
+</html>

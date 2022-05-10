@@ -34,6 +34,7 @@ class Game {
     const axes = new THREE.AxesHelper(1000);
     this.scene.add(axes);
     this.pickedPionek;
+    this.pionkiBody;
 
     this.createBoard();
     this.createPionek();
@@ -60,7 +61,7 @@ class Game {
         // zerowy w tablicy czyli najbliższy kamery obiekt to ten, którego potrzebujemy:
         this.oldPicked;
         this.picked = intersects[0].object;
-        console.log(this.picked);
+        // console.log(this.picked);
         if (this.picked.name.includes("pionek")) {
           this.pickedPionek = intersects[0].object;
           this.handleMove();
@@ -71,12 +72,13 @@ class Game {
           this.handleFieldClick();
         }
       } else {
-        console.log("nie wybrano pionka");
+        // console.log("nie wybrano pionka");
       }
     });
   };
 
   searchNewMoves = () => {
+    let doesChange = false;
     setInterval(() => {
       console.log("szukam");
       fetch("/porownywanie_tablicy", {
@@ -86,17 +88,18 @@ class Game {
         },
       })
         .then((response) => response.json())
-        .then((newTab) => {
-          console.log(newTab);
+        .then((data) => {
+          console.log(data);
           console.log(this.pionki);
-          if (JSON.stringify(this.pionki) != JSON.stringify(newTab)) {
-            this.pionki = [...newTab];
+          if (JSON.stringify(data) !== JSON.stringify(this.pionkiBody)) {
             console.log("noweeee");
-            console.table(this.pionki);
-            this.movePionek();
+            this.movePionek(data.pionek, data.newX, data.newY);
+            doesChange = !doesChange;
+            this.pionkiBody = data;
           }
         });
     }, 1000);
+    console.log("beka");
   };
 
   handleFieldClick = () => {
@@ -109,7 +112,14 @@ class Game {
       this.pionki[oldX][oldY] = 0;
       this.pionki[newX][newY] = 1;
       let body = {
-        pionki: this.pionki,
+        pionek: this.pickedPionek,
+        newX: newX,
+        newY: newY,
+      };
+      this.pionkiBody = {
+        pionek: this.pickedPionek,
+        newX: newX,
+        newY: newY,
       };
       fetch("/aktualizacja_tablicy", {
         method: "POST",
@@ -120,9 +130,11 @@ class Game {
       })
         .then((response) => response.json())
         .then((data) => {
-          this.pionki = [...data];
+          // this.pionki = [...data];
+          console.log(data);
           console.table(this.pionki);
           this.pickedPionek.setPosition(newX, newY);
+          this.pickedPionek.pionekName = `${newX}_${newY}`;
           this.pickedPionek = undefined;
           this.repairPrevious();
         });
@@ -209,35 +221,45 @@ class Game {
     });
   };
 
-  movePionek = () => {
-    let z = 0;
-    this.pionki.forEach((arr, i) => {
-      let tileX = -3.5;
-      arr.forEach((elem, index) => {
-        // let pionek = this.pionki[(i, index)];
-        let pionek = scene.getObjectByName(`pionek${i_index}`);
+  movePionek = (chgPionek, chgX, chgY) => {
+    console.log(chgPionek);
+    console.log(chgX);
+    console.log(chgY);
+    console.log(chgPionek.object.name);
 
-        if (elem == 1) {
-          // pionek.setColor(0xffffff);
-          // pionek.position.set(tileX * 10, 2, z);
-          pionek.setPosition(tileX * 10, z);
-          pionek._positionInfo = `${i}_${index}`;
-          pionek.color = "white";
-          pionek.pionekName = `${i}_${index}`;
-        } else if (elem == 2) {
-          // pionek.setColor(0x85611b);
-          // pionek.position.set(tileX * 10, 2, z);
-          console.log(pionek);
-          pionek.setPosition(tileX * 10, z);
-          pionek._positionInfo = `${i}_${index}`;
-          pionek.color = "black";
-          pionek.pionekName = `${i}_${index}`;
-        }
+    let pionekToMove = this.scene.getObjectByName(chgPionek.object.name);
+    console.log(pionekToMove);
+    pionekToMove.pionekName = `${chgX}_${chgY}`;
+    let tileX = (-3.5 + chgY) * 10;
+    let z = (chgX + 1) * 10;
+    pionekToMove.setPosition(chgX, chgY);
+    // this.pionki.forEach((arr, i) => {
+    //   let tileX = -3.5;
+    //   arr.forEach((elem, index) => {
+    //     // let pionek = this.pionki[(i, index)];
+    //     let pionek = scene.getObjectByName(`pionek${i_index}`);
 
-        tileX++;
-      });
-      z = (i + 1) * 10;
-    });
+    //     if (elem == 1) {
+    //       // pionek.setColor(0xffffff);
+    //       // pionek.position.set(tileX * 10, 2, z);
+    //       pionek.setPosition(tileX * 10, z);
+    //       pionek._positionInfo = `${i}_${index}`;
+    //       pionek.color = "white";
+    //       pionek.pionekName = `${i}_${index}`;
+    //     } else if (elem == 2) {
+    //       // pionek.setColor(0x85611b);
+    //       // pionek.position.set(tileX * 10, 2, z);
+    //       console.log(pionek);
+    //       pionek.setPosition(tileX * 10, z);
+    //       pionek._positionInfo = `${i}_${index}`;
+    //       pionek.color = "black";
+    //       pionek.pionekName = `${i}_${index}`;
+    //     }
+
+    //     tileX++;
+    //   });
+    //   z = (i + 1) * 10;
+    // });
   };
 
   render = () => {

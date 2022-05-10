@@ -7,7 +7,7 @@ var app = express();
 const PORT = 3000;
 var path = require("path");
 
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 app.use(express.static("static"));
 
 app.listen(PORT, function () {
@@ -16,6 +16,7 @@ app.listen(PORT, function () {
 app.use(
   express.urlencoded({
     extended: true,
+    limit: "50mb",
   })
 );
 
@@ -46,6 +47,11 @@ let currentTab = [
   [0, 1, 0, 1, 0, 1, 0, 1],
 ];
 
+let doesChange = false;
+let pionek = {};
+let newX = 0;
+let newY = 0;
+
 /**----------------------
  *   GETY I POSTY
  *------------------------**/
@@ -61,19 +67,39 @@ app.post("/post", function (req, res) {
   res.send(req.body);
 });
 app.post("/checkUsers", function (req, res) {
-  if (users.length == 2) {
-    res.send(true);
-  } else {
-    res.send(false);
+  // if (users.length == 2) {
+  //   res.send(true);
+  // } else {
+  //   res.send(false);
+  // }
+  let arrLen = users.length;
+  if (users.length) {
+    res.send({ arrLen });
   }
 });
 app.post("/aktualizacja_tablicy", function (req, res) {
   console.log(req.body);
+  doesChange = !doesChange;
   // console.log(req.body.pionki);
-  currentTab = [...req.body.pionki];
+  // currentTab = [...req.body.pionki];
+  pionek = req.body.pionek;
+  newX = req.body.newX;
+  newY = req.body.newY;
   console.log(currentTab);
-  res.send(currentTab);
+  let body = {
+    pionek: pionek,
+    newX: newX,
+    newY: newY,
+  };
+  console.log(body);
+  res.send(body);
 });
 app.post("/porownywanie_tablicy", function (req, res) {
-  res.send(currentTab);
+  let body = {
+    pionek: pionek,
+    newX: newX,
+    newY: newY,
+  };
+  // res.send([pionek, newX, newY, doesChange]);
+  res.send(body);
 });
