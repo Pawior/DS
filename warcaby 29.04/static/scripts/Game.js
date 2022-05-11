@@ -88,11 +88,13 @@ class Game {
         // zerowy w tablicy czyli najbliższy kamery obiekt to ten, którego potrzebujemy:
         this.oldPicked;
         this.picked = intersects[0].object;
-        // console.log(this.picked);
+        console.log(this.picked);
         if (this.picked.name.includes("pionek")) {
-          this.pickedPionek = intersects[0].object;
-          this.handleMove();
-          this.oldPicked = intersects[0].object;
+          if (this.picked._color == this.colorPionkow) {
+            this.pickedPionek = intersects[0].object;
+            this.handleMove();
+            this.oldPicked = intersects[0].object;
+          }
         }
         if (this.picked.name == "pole") {
           this.pickedPole = intersects[0].object;
@@ -128,42 +130,73 @@ class Game {
 
   handleFieldClick = () => {
     // console.log(this.pickedPole);
-    console.log(net);
-    let newNet = new Net();
-    console.log(newNet);
+    // let newNet = new Net();
     if (this.oldPicked) {
       let newX = this.pickedPole._positionInfo[0];
       let newY = this.pickedPole._positionInfo[2];
-      let oldX = this.oldPicked._positionInfo[0];
-      let oldY = this.oldPicked._positionInfo[2];
-      this.pionki[oldX][oldY] = 0;
-      this.pionki[newX][newY] = 1;
-      let body = {
-        pionek: this.pickedPionek,
-        newX: newX,
-        newY: newY,
+      let oldX = this.oldPicked.positionCoords[0];
+      let oldY = this.oldPicked.positionCoords[2];
+
+      let pionekX = this.pickedPionek.positionCoords[0];
+      let pionekY = this.pickedPionek.positionCoords[2];
+
+      const canMoveWhite = () => {
+        if (this.pickedPionek._color == "white") {
+          if (
+            parseInt(newY) == parseInt(pionekY) + 1 ||
+            parseInt(newY) == parseInt(pionekY) - 1
+          ) {
+            if (newX == pionekX - 1) {
+              return true;
+            }
+          }
+          return false;
+        } else return false;
       };
-      this.pionkiBody = {
-        pionek: this.pickedPionek,
-        newX: newX,
-        newY: newY,
+      const canMoveBlack = () => {
+        if (this.pickedPionek._color == "black") {
+          if (
+            parseInt(newY) == parseInt(pionekY) + 1 ||
+            parseInt(newY) == parseInt(pionekY) - 1
+          ) {
+            if (newX == parseInt(pionekX) + 1) {
+              return true;
+            }
+          }
+          return false;
+        } else return false;
       };
-      fetch("/aktualizacja_tablicy", {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          // console.log(data);
-          // console.table(this.pionki);
-          this.pickedPionek.setPosition(newX, newY);
-          this.pickedPionek.pionekName = `${newX}_${newY}`;
-          this.pickedPionek = undefined;
-          this.repairPrevious();
-        });
+      if (canMoveWhite() || canMoveBlack()) {
+        this.pionki[oldX][oldY] = 0;
+        this.pionki[newX][newY] = 1;
+        let body = {
+          pionek: this.pickedPionek,
+          newX: newX,
+          newY: newY,
+        };
+        this.pionkiBody = {
+          pionek: this.pickedPionek,
+          newX: newX,
+          newY: newY,
+        };
+        fetch("/aktualizacja_tablicy", {
+          method: "POST",
+          body: JSON.stringify(body),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // console.log(data);
+            // console.table(this.pionki);
+            this.pickedPionek.setPosition(newX, newY);
+            this.pickedPionek.pionekName = `${newX}_${newY}`;
+            this.pickedPionek.positionCoords = `${newX}_${newY}`;
+            this.pickedPionek = undefined;
+            this.repairPrevious();
+          });
+      }
     }
   };
   handleMove = () => {
@@ -228,14 +261,14 @@ class Game {
         if (elem == 1) {
           pionek.setColor(0xffffff);
           pionek.position.set(tileX * 10, 2, z);
-          pionek._positionInfo = `${i}_${index}`;
+          pionek.positionInfo = `${i}_${index}`;
           pionek.pionekName = `${i}_${index}`;
           pionek.color = "white";
           this.scene.add(pionek);
         } else if (elem == 2) {
           pionek.setColor(0x85611b);
           pionek.position.set(tileX * 10, 2, z);
-          pionek._positionInfo = `${i}_${index}`;
+          pionek.positionInfo = `${i}_${index}`;
           pionek.pionekName = `${i}_${index}`;
           pionek.color = "black";
           this.scene.add(pionek);
@@ -252,6 +285,9 @@ class Game {
     try {
       let pionekToMove = this.scene.getObjectByName(chgPionek.object.name);
       pionekToMove.pionekName = `${chgX}_${chgY}`;
+      // pionekToMove.positionInfo = `${chgX}_${chgY}`;
+      pionekToMove.setPositionInfo(`${chgX}_${chgY}`);
+      pionekToMove.positionCoords = `${chgX}_${chgY}`;
       let tileX = (-3.5 + chgY) * 10;
       let z = (chgX + 1) * 10;
       pionekToMove.setPosition(chgX, chgY);

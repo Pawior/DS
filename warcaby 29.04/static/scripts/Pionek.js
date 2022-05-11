@@ -11,7 +11,7 @@ class Pionek extends THREE.Mesh {
       opacity: 0.5,
       color: 0xff0000,
     });
-    this._positionInfo = "";
+    this.positionCoords = "";
     this._color = "";
     this.name = "pionek";
     // this.name = "bbb" Moge w ten sposób podmieniać parametry
@@ -26,7 +26,7 @@ class Pionek extends THREE.Mesh {
     this.material.color.setHex(val);
   };
   set positionInfo(pos) {
-    this._positionInfo = pos;
+    this.positionCoords = pos;
   }
 
   get positionInfo() {
@@ -52,5 +52,8 @@ class Pionek extends THREE.Mesh {
     console.log(x);
     this.position.setZ(z);
     this.position.setX(x);
+  };
+  setPositionInfo = (newPos) => {
+    this.positionCoords = newPos;
   };
 }
