@@ -1,6 +1,7 @@
 class Net {
   constructor() {
     this.init();
+    this.colorPionkow = "";
     // this.oldTab = []
   }
   init() {
@@ -37,27 +38,30 @@ class Net {
             .then((data) => {
               console.log(data);
               if (data.arrLen == 2) {
-                console.log(checkUsersInterval);
                 clearInterval(checkUsersInterval);
                 if (document.querySelector("#usersError")) {
                   document.querySelector("#usersError").style.display = "none";
                 }
                 document.querySelector("#loginDiv-waiting").style.display =
                   "none";
+                if (this.colorPionkow != "white") {
+                  this.colorPionkow = "black";
+                }
+                console.log(this.colorPionkow);
               } else if (data.arrLen == 1) {
-                console.log("modal wchodzi");
                 document.querySelector("#statusBar-usersError").innerHTML =
                   "<p id='usersError'> Nieprawidłowa ilość userów</p>";
                 document.querySelector("#loginDiv-waiting").style.display =
                   "block";
                 // document.querySelector("#root").style.pointerEvents = "none";
-                document.querySelector(".loginDiv-modal").addEventListener(
-                  "click",
-                  function (event) {
-                    event.stopPropagation();
-                  },
-                  true
-                );
+                // document.querySelector(".loginDiv-modal").addEventListener(
+                //   "click",
+                //   function (event) {
+                //     event.stopPropagation();
+                //   },
+                //   true
+                // );
+                this.colorPionkow = "white";
               } else {
                 // document.querySelector("#statusBar-usersError").innerHTML =
                 //   "<p id='usersError'> Nieprawidłowa ilość userów</p>";
@@ -69,6 +73,7 @@ class Net {
       })
       .catch((err) => console.log(err));
   }
+
   // searchNewMoves = () => {
   //   setInterval(() => {
   //     fetch("/porownywanie_tablicy", {

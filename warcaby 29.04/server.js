@@ -51,6 +51,7 @@ let doesChange = false;
 let pionek = {};
 let newX = 0;
 let newY = 0;
+let colorPionkow = "";
 
 /**----------------------
  *   GETY I POSTY
@@ -61,17 +62,11 @@ app.get("/", function (req, res) {
 
 app.post("/post", function (req, res) {
   res.setHeader("Content-Type", "application/json");
-  // console.log(req.body);
   users.push(req.body.user);
   console.log(users);
   res.send(req.body);
 });
 app.post("/checkUsers", function (req, res) {
-  // if (users.length == 2) {
-  //   res.send(true);
-  // } else {
-  //   res.send(false);
-  // }
   let arrLen = users.length;
   if (users.length) {
     res.send({ arrLen });
@@ -80,8 +75,6 @@ app.post("/checkUsers", function (req, res) {
 app.post("/aktualizacja_tablicy", function (req, res) {
   console.log(req.body);
   doesChange = !doesChange;
-  // console.log(req.body.pionki);
-  // currentTab = [...req.body.pionki];
   pionek = req.body.pionek;
   newX = req.body.newX;
   newY = req.body.newY;
@@ -102,4 +95,20 @@ app.post("/porownywanie_tablicy", function (req, res) {
   };
   // res.send([pionek, newX, newY, doesChange]);
   res.send(body);
+});
+app.post("/giveColor", function (req, res) {
+  var random_boolean = Math.random() < 0.5;
+  if (colorPionkow == "") {
+    random_boolean ? (colorPionkow = "white") : (colorPionkow = "black");
+  } else {
+    colorPionkow == "white"
+      ? (colorPionkow = "black")
+      : (colorPionkow = "white");
+  }
+  res.send({ colorPionkow });
+  console.log("Wysłałem");
+  console.log(colorPionkow);
+  // if (random_boolean) {
+  //   colorPionkow = "white";
+  // }
 });
