@@ -140,6 +140,42 @@ class Game {
       let pionekX = this.pickedPionek.positionCoords[0];
       let pionekY = this.pickedPionek.positionCoords[2];
 
+      const checkCollision = () => {
+        let enemyRight = `pionek${parseInt(newX) - 1}_${parseInt(newY) - 1}`;
+        let enemyLeft = `pionek${parseInt(newX) + 1}_${parseInt(newY) + 1}`;
+        let enemyUpper = `pionek${parseInt(newX) + 1}_${parseInt(newY) - 1}`;
+        let enemyBottom = `pionek${parseInt(newX) - 1}_${parseInt(newY) + 1}`;
+        if (
+          this.scene.getObjectByName(enemyRight) ||
+          this.scene.getObjectByName(enemyLeft) ||
+          this.scene.getObjectByName(enemyUpper) ||
+          this.scene.getObjectByName(enemyBottom)
+        ) {
+          console.log("Jest enemy");
+          if (
+            parseInt(newY) == parseInt(pionekY) + 2 ||
+            parseInt(newY) == parseInt(pionekY) - 2
+          ) {
+            if (
+              newX == parseInt(pionekX) - 2 ||
+              newX == parseInt(pionekX) + 2
+            ) {
+              let enemyX = (parseInt(newX) + parseInt(pionekX)) / 2;
+              let enemyY = (parseInt(newY) + parseInt(pionekY)) / 2;
+              console.log(enemyX);
+              console.log(enemyY);
+              let enemyToRemove = `pionek${enemyX}_${enemyY}`;
+              console.log(enemyToRemove);
+              let enemyToRemoveGot = this.scene.getObjectByName(enemyToRemove);
+              console.log(enemyToRemoveGot);
+              this.scene.remove(enemyToRemoveGot);
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+
       const canMoveWhite = () => {
         if (this.pickedPionek._color == "white") {
           if (
@@ -166,7 +202,8 @@ class Game {
           return false;
         } else return false;
       };
-      if (canMoveWhite() || canMoveBlack()) {
+
+      const moveHandler = () => {
         this.pionki[oldX][oldY] = 0;
         this.pionki[newX][newY] = 1;
         let body = {
@@ -196,6 +233,10 @@ class Game {
             this.pickedPionek = undefined;
             this.repairPrevious();
           });
+      };
+
+      if (canMoveWhite() || canMoveBlack() || checkCollision()) {
+        moveHandler();
       }
     }
   };
@@ -284,6 +325,53 @@ class Game {
     console.log(chgPionek);
     try {
       let pionekToMove = this.scene.getObjectByName(chgPionek.object.name);
+
+      let pionekX = pionekToMove.positionCoords[0];
+      let pionekY = pionekToMove.positionCoords[2];
+
+      const checkCollision = () => {
+        let enemyRight = `pionek${parseInt(chgX) - 1}_${parseInt(chgY) - 1}`;
+        let enemyLeft = `pionek${parseInt(chgX) + 1}_${parseInt(chgY) + 1}`;
+        let enemyUpper = `pionek${parseInt(chgX) + 1}_${parseInt(chgY) - 1}`;
+        let enemyBottom = `pionek${parseInt(chgX) - 1}_${parseInt(chgY) + 1}`;
+        if (
+          this.scene.getObjectByName(enemyRight) ||
+          this.scene.getObjectByName(enemyLeft) ||
+          this.scene.getObjectByName(enemyUpper) ||
+          this.scene.getObjectByName(enemyBottom)
+        ) {
+          console.log("Jest enemy");
+          if (
+            parseInt(chgY) == parseInt(pionekY) + 2 ||
+            parseInt(chgY) == parseInt(pionekY) - 2
+          ) {
+            if (
+              chgX == parseInt(pionekX) - 2 ||
+              chgX == parseInt(pionekX) + 2
+            ) {
+              console.log("change: ");
+              console.log(parseInt(chgX) + " " + parseInt(chgY));
+              console.log("pionek stara pozycja: ");
+              console.log(parseInt(pionekX) + " " + parseInt(pionekY));
+
+              let enemyX = (parseInt(chgX) + parseInt(pionekX)) / 2;
+              let enemyY = (parseInt(chgY) + parseInt(pionekY)) / 2;
+              console.log(enemyX);
+              console.log(enemyY);
+              let enemyToRemove = `pionek${enemyX}_${enemyY}`;
+              console.log(enemyToRemove);
+              let enemyToRemoveGot = this.scene.getObjectByName(enemyToRemove);
+              console.log(enemyToRemoveGot);
+              this.scene.remove(enemyToRemoveGot);
+              return true;
+            }
+          }
+        }
+        return false;
+      };
+
+      checkCollision();
+
       pionekToMove.pionekName = `${chgX}_${chgY}`;
       // pionekToMove.positionInfo = `${chgX}_${chgY}`;
       pionekToMove.setPositionInfo(`${chgX}_${chgY}`);
