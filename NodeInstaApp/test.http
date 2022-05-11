@@ -8,7 +8,7 @@ Content-Type: image/jpeg
 < ./image.jpg
 
 ------FormBoundary1234
-Content-Disposition: form-data; name="album"
+Content-Disposition: form-data; name="album3"
 Content-Type: text/plain
 
 nazwa_albumu
