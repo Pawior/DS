@@ -54,7 +54,7 @@ class Pionek extends THREE.Mesh {
     new TWEEN.Tween(this.position) // co
       .to({ x: x, z: z }, 500) // do jakiej pozycji, w jakim czasie
       .repeat(0) // liczba powtórzeń
-      .easing(TWEEN.Easing.Elastic.InOut) //.Out) // typ easingu (zmiana w czasie)
+      .easing(TWEEN.Easing.Bounce.Out) //.Out) // typ easingu (zmiana w czasie)
       .onUpdate(() => {
         console.log(this.position);
       })
