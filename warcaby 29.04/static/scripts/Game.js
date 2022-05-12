@@ -48,6 +48,10 @@ class Game {
     this.render(); // wywołanie metody render
     this.raycaster();
     this.searchNewMoves();
+    this.canMove = true;
+    this.timerInterval;
+
+    // this.waitForMove();
 
     this.colorPionkow = "";
     fetch("/giveColor", {
@@ -64,11 +68,78 @@ class Game {
           this.camera.position.set(0, 100, -80);
           this.camera.rotation.y = Math.PI;
           this.camera.rotation.x += 1.4;
+          this.canMove = false;
+          let checkGameRdy = setInterval(() => {
+            let divWaiting = document.querySelector("#loginDiv-waiting");
+            if (divWaiting.style.display == "none") {
+              document.querySelector("#loginDiv-moveWaiting").style.display =
+                "block";
+              this.countdown();
+              clearInterval(checkGameRdy);
+            }
+          }, 1000);
 
           this.camera.updateProjectionMatrix();
+        } else {
+          let checkGameRdy = setInterval(() => {
+            let divWaiting = document.querySelector("#loginDiv-waiting");
+            if (divWaiting.style.display == "none") {
+              document.querySelector("#loginDiv-moveWaiting").style.display =
+                "none";
+              this.countdown();
+              clearInterval(checkGameRdy);
+            }
+          }, 1000);
         }
       });
+
+    const onWindowResize = () => {
+      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.updateProjectionMatrix();
+
+      this.renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener("resize", onWindowResize, false);
   }
+
+  waitForMove = () => {
+    console.log("Waiting forwaitForMove");
+    setInterval(() => {
+      console.log(this.canMove);
+      if (this.canMove) {
+        document.querySelector("#loginDiv-moveWaiting").style.display = "none";
+      }
+      if (this.canMove == false) {
+        document.querySelector("#loginDiv-moveWaiting").style.display = "block";
+      }
+
+      // fetch("/didMove", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-type": "application/json",
+      //   },
+      //   body: {
+      //     colorPionkow: JSON.stringify(this.colorPionkow),
+      //   },
+      // })
+      //   .then((response) => response.json())
+      //   .then((data) => {
+      //     // console.log(data.pionek);
+
+      //     console.log(data);
+
+      //     data ? (this.canMove = true) : (this.canMove = false);
+      //     if (this.canMove) {
+      //       document.querySelector("#loginDiv-moveWaiting").style.display =
+      //         "none";
+      //     }
+      //     if (!this.canMove) {
+      //       document.querySelector("#loginDiv-moveWaiting").style.display =
+      //         "block";
+      //     }
+      //   });
+    }, 1000);
+  };
 
   /**--------------------------------------------
    *               Raycast
@@ -83,25 +154,27 @@ class Game {
       mouseVector.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
       raycaster.setFromCamera(mouseVector, this.camera);
-      const intersects = raycaster.intersectObjects(this.scene.children);
-      if (intersects.length > 0) {
-        // zerowy w tablicy czyli najbliższy kamery obiekt to ten, którego potrzebujemy:
-        this.oldPicked;
-        this.picked = intersects[0].object;
-        console.log(this.picked);
-        if (this.picked.name.includes("pionek")) {
-          if (this.picked._color == this.colorPionkow) {
-            this.pickedPionek = intersects[0].object;
-            this.handleMove();
-            this.oldPicked = intersects[0].object;
+      if (this.canMove) {
+        const intersects = raycaster.intersectObjects(this.scene.children);
+        if (intersects.length > 0) {
+          // zerowy w tablicy czyli najbliższy kamery obiekt to ten, którego potrzebujemy:
+          this.oldPicked;
+          this.picked = intersects[0].object;
+          console.log(this.picked);
+          if (this.picked.name.includes("pionek")) {
+            if (this.picked._color == this.colorPionkow) {
+              this.pickedPionek = intersects[0].object;
+              this.handleMove();
+              this.oldPicked = intersects[0].object;
+            }
           }
+          if (this.picked.name == "pole") {
+            this.pickedPole = intersects[0].object;
+            this.handleFieldClick();
+          }
+        } else {
+          // console.log("nie wybrano pionka");
         }
-        if (this.picked.name == "pole") {
-          this.pickedPole = intersects[0].object;
-          this.handleFieldClick();
-        }
-      } else {
-        // console.log("nie wybrano pionka");
       }
     });
   };
@@ -123,6 +196,8 @@ class Game {
             this.movePionek(data.pionek, data.newX, data.newY);
             doesChange = !doesChange;
             this.pionkiBody = data;
+
+            console.log(this.canMove);
           }
         });
     }, 1000);
@@ -211,11 +286,11 @@ class Game {
           newX: newX,
           newY: newY,
         };
-        this.pionkiBody = {
-          pionek: this.pickedPionek,
-          newX: newX,
-          newY: newY,
-        };
+        // this.pionkiBody = {
+        //   pionek: this.pickedPionek,
+        //   newX: newX,
+        //   newY: newY,
+        // };
         fetch("/aktualizacja_tablicy", {
           method: "POST",
           body: JSON.stringify(body),
@@ -227,11 +302,16 @@ class Game {
           .then((data) => {
             // console.log(data);
             // console.table(this.pionki);
+
             this.pickedPionek.setPosition(newX, newY);
             this.pickedPionek.pionekName = `${newX}_${newY}`;
             this.pickedPionek.positionCoords = `${newX}_${newY}`;
             this.pickedPionek = undefined;
             this.repairPrevious();
+            this.canMove = false;
+            document.querySelector("#loginDiv-moveWaiting").style.display =
+              "block";
+            this.countdown();
           });
       };
 
@@ -380,13 +460,46 @@ class Game {
       let tileX = (-3.5 + chgY) * 10;
       let z = (chgX + 1) * 10;
       pionekToMove.setPosition(chgX, chgY);
+      if (chgX != pionekX && chgY != pionekY) {
+        this.canMove = true;
+        document.querySelector("#loginDiv-moveWaiting").style.display = "none";
+        this.countdown();
+      }
     } catch (e) {
       console.error(e);
     }
   };
 
+  countdown = () => {
+    clearInterval(this.timerInterval);
+    let timeLeft = 8;
+    let divTimer = document.getElementById("countdown-timer");
+
+    this.timerInterval = setInterval(() => {
+      if (timeLeft == -1) {
+        clearInterval(this.timerInterval);
+        // doSomething();
+        if (this.canMove == true) {
+          this.canMove = false;
+          document.querySelector("#loginDiv-moveWaiting").style.display =
+            "block";
+          this.countdown();
+        } else if (this.canMove == false) {
+          this.canMove = true;
+          document.querySelector("#loginDiv-moveWaiting").style.display =
+            "none";
+          this.countdown();
+        }
+      } else {
+        divTimer.innerHTML = timeLeft + " seconds remaining";
+        timeLeft--;
+      }
+    }, 1000);
+  };
+
   render = () => {
     requestAnimationFrame(this.render);
     this.renderer.render(this.scene, this.camera);
+    TWEEN.update();
   };
 }

@@ -51,8 +51,19 @@ class Pionek extends THREE.Mesh {
     console.log(x);
     x *= 10;
     console.log(x);
-    this.position.setZ(z);
-    this.position.setX(x);
+    new TWEEN.Tween(this.position) // co
+      .to({ x: x, z: z }, 500) // do jakiej pozycji, w jakim czasie
+      .repeat(0) // liczba powtórzeń
+      .easing(TWEEN.Easing.Elastic.InOut) //.Out) // typ easingu (zmiana w czasie)
+      .onUpdate(() => {
+        console.log(this.position);
+      })
+      .onComplete(() => {
+        console.log("koniec animacji");
+      }) // funkcja po zakończeniu animacji
+      .start();
+    // this.position.setZ(z);
+    // this.position.setX(x);
   };
   setPositionInfo = (newPos) => {
     this.positionCoords = newPos;

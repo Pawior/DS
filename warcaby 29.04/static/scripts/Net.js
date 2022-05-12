@@ -46,6 +46,9 @@ class Net {
                   "none";
                 if (this.colorPionkow != "white") {
                   this.colorPionkow = "black";
+                  // document.querySelector(
+                  //   "#loginDiv-moveWaiting"
+                  // ).style.display = "block";
                 }
                 console.log(this.colorPionkow);
               } else if (data.arrLen == 1) {

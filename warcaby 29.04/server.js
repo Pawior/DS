@@ -112,3 +112,11 @@ app.post("/giveColor", function (req, res) {
   //   colorPionkow = "white";
   // }
 });
+app.post("/didMove", function (req, res) {
+  let moveOrder = {
+    white: true,
+    black: false,
+  };
+  let userColor = req.body;
+  console.log(userColor);
+});
