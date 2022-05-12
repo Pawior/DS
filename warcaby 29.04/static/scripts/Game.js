@@ -242,12 +242,13 @@ class Game {
   };
   handleMove = () => {
     // console.log(this.pickedPionek);
-    this.pickedPionek.setColor(0xabc);
     this.repairPrevious();
+    this.pickedPionek.setColor(0xabc);
   };
 
   repairPrevious = () => {
     if (this.oldPicked) {
+      // if ( this.oldPicked._color == 0xabc)
       if (this.oldPicked._color == "black") {
         this.oldPicked.setColor(0x85611b);
       } else if (this.oldPicked._color == "white") {

@@ -23,6 +23,7 @@ class Pionek extends THREE.Mesh {
 
   setColor = (val) => {
     console.log("zmieniam klor");
+    console.log(val);
     this.material.color.setHex(val);
   };
   set positionInfo(pos) {
