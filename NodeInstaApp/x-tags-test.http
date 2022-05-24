@@ -21,7 +21,7 @@ Content-type: application/json
 
 ###
 
-GET http://localhost:3000/api/photos/tags/1653257674617 HTTP/1.1
+GET http://localhost:3000/api/photos/tags/1653305115595 HTTP/1.1
 
 ###
 

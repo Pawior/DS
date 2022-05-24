@@ -28,7 +28,7 @@ PATCH http://localhost:3000/api/photos
 Content-type: application/json
 
 {
-    "id": 1653257282041,
+    "id": 1653305115595,
     "status": "zmienione 3"
 }
 
@@ -42,13 +42,13 @@ PATCH http://localhost:3000/api/photos/tags
 Content-type: application/json
 
 {
-    "id": 1653257674617,
-    "name":"#nowytag",
+    "id": 1653305115595,
+    "name":"#nowytag2",
     "popularity": 1000000   
 }
 
 ###
 
-GET http://localhost:3000/api/photos/tags/1653257674617 HTTP/1.1
+GET http://localhost:3000/api/photos/tags/1653305115595 HTTP/1.1
 
 ###

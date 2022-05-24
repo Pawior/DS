@@ -18,7 +18,11 @@ class Animal {
 }
 let animalsArray = [];
 
-let imagesArray = []
+let imagesArray = [];
+
+let userArray = [];
+
+
 animalsArray.push({ name: 'cat', color: 'black' })
 animalsArray.push({ name: 'dog', color: 'yellow' })
-module.exports = { Animal, imagesArray };
+module.exports = { Animal, imagesArray, userArray };

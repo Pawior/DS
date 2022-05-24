@@ -2,6 +2,8 @@ const http = require('http');
 const PORT = 3000;
 const imageRouter = require("./app/imageRouter")
 const tagsRouter = require("./app/tagsRouter")
+const userRouter = require("./app/userRouter")
+require('dotenv').config();
 
 
 http.createServer(async (req, res) => {
@@ -18,7 +20,11 @@ http.createServer(async (req, res) => {
         await tagsRouter(req, res)
     }
 
-}).listen(PORT, () => console.log("listen on 3000"))
+    else if (req.url.search("/api/user") != -1) {
+        await userRouter(req, res)
+    }
+
+}).listen(process.env.APP_PORT, () => console.log(`listen on ${process.env.APP_PORT}`))
 
 const logger = require('tracer').colorConsole();
 
