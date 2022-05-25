@@ -2,14 +2,26 @@ POST http://localhost:3000/api/user/register HTTP/1.1
 Content-type: application/json
 
 {    
-   "name": "name",
-   "lastName": "lastName",
-   "email":"name@email.pl",
+   "name": "Adam2",
+   "lastName": "Nowak",
+   "email":"Adam@email.pl",
    "password":"password"
 }
 
 ###
 
-GET http://localhost:3000/api/user/confirm/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFhYUB5YWhvby5jb20iLCJhbnlEYXRhIjoiMTIzIiwiaWF0IjoxNjUzMzA4OTEzLCJleHAiOjE2NTMzMDkwMzN9.kUCzgNMp9eUU7JMe-bcEKvJ8CN16NNl0C2CISHONr44 HTTP/1.1
+GET http://localhost:3000/api/user/confirm/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkFkYW0iLCJlbWFpbCI6IkFkYW1AZW1haWwucGwiLCJhbnlEYXRhIjoiMTIzIiwiaWF0IjoxNjUzNTE1MTcyLCJleHAiOjE2NTM1MTU0NzJ9.TPUSt0_cz09Bo_VsgPTlCQBwFwhjtrKFYZNll0_otxM HTTP/1.1
 
 ###
+
+GET http://localhost:3000/api/user HTTP/1.1
+
+###
+
+POST http://localhost:3000/api/user/login HTTP/1.1
+Content-type: application/json
+
+{
+  "email":"Adam@email.pl",
+  "password":"password"
+}
