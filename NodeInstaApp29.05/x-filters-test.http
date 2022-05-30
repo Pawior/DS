@@ -1,0 +1,21 @@
+
+GET http://localhost:3000/api/filters HTTP/1.1
+
+###
+
+GET http://localhost:3000/api/filters/uploads/album71/upload_916e053a8646f84715fcf0dc9f4ac6bb.jpg HTTP/1.1
+
+###
+
+GET http://localhost:3000/api/filters/metadata/1653890655413 HTTP/1.1
+
+###
+
+PATCH http://localhost:3000/api/filters HTTP/1.1
+Content-type: application/json
+
+{   
+  "id": "1653892459582",    
+  "filterType":"resize"
+}
+
