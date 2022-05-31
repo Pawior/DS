@@ -1,4 +1,5 @@
 const filtersController = require("./filtersController");
+const fs = require("fs");
 
 const filtersRouter = async (req, res) => {
   if (req.url == "/api/filters" && req.method == "GET") {
@@ -34,7 +35,20 @@ const filtersRouter = async (req, res) => {
     console.log(tempUrl);
     console.log(folderName);
     await filtersController.downloadSpecific(imgName, folderName);
-    res.end("pobieranie");
+    let fileToLoad = fs.readFileSync(
+      "./app/upload/albumNr72/upload_8aa15899a34d6cb7a3b7090c88b86e12.jpg"
+    );
+    res.writeHead(200, { "Content-Type": "image/jpg" });
+    res.end(fileToLoad, "binary");
+
+    // res.setHeader("Content-Type", "image/jpg");
+    // res.end(
+    //   new Buffer(
+    //     "<img src='" +
+    //       "http://localhost:3000/upload/albumNr72/upload_8aa15899a34d6cb7a3b7090c88b86e12.jpg" +
+    //       "'>"
+    //   )
+    // );
   }
 };
 

@@ -131,6 +131,6 @@ module.exports = {
   },
   downloadSpecific: async (imgName, folderName) => {
     // console.log(data);
-    await downloadImage(imgName, folderName);
+    return "OK";
   },
 };
